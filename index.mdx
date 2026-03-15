@@ -1,0 +1,127 @@
+---
+title: "Critical Thinking for Engineers"
+description: "Recognize logical fallacies, cognitive biases, statistical pitfalls, and data presentation tricks. Nine lessons grounded in engineering examples, drawing from Kahneman, Huff, Reinhart, and Bennett to sharpen your reasoning in design reviews, debugging sessions, and technical decision-making."
+pubDate: 2026-03-01
+tags: ["critical-thinking", "logical-fallacies", "cognitive-bias", "statistics", "data-visualization", "engineering", "reasoning"]
+excerpt: "The hardest bugs to fix are the ones in your own reasoning. This course teaches engineers and researchers to spot flawed arguments, recognize their own biases, interpret statistics correctly, and present data honestly."
+heroImage: "https://cdn.siliconwit.com/education/critical-thinking-engineers/critical-thinking-engineers-overview.png"
+---
+
+import Copyright from '../../../../components/Copyright.astro';
+import TawkWidget from '../../../../components/TawkWidget.astro';
+import { Card, CardGrid, Badge, Steps } from '@astrojs/starlight/components';
+
+The hardest bugs to fix are the ones in your own reasoning. You can write flawless C, design elegant circuits, and still make terrible engineering decisions because of a cognitive bias you did not notice or a statistical mistake you did not catch. This course is your debugger for thinking itself. Every lesson uses real engineering scenarios, from code reviews to design meetings to test reports, so the concepts stick where they matter most.
+
+## Why Critical Thinking for Engineers?
+
+Engineers make high-stakes decisions under uncertainty every day. Which architecture should we choose? Is this test data sufficient to ship? Should we rewrite this module or keep patching it? The quality of those decisions depends not just on technical knowledge, but on how clearly you reason about the evidence in front of you.
+
+<CardGrid>
+  <Card title="Better Technical Arguments" icon="star">
+    Learn to recognize when a colleague's argument (or your own) relies on a logical fallacy rather than evidence. Spot straw man arguments in code reviews, false dichotomies in architecture debates, and appeals to authority when someone invokes a framework's popularity instead of its fit.
+  </Card>
+
+  <Card title="Bias-Resistant Decisions" icon="setting">
+    Understand the cognitive shortcuts your brain takes automatically, and learn when those shortcuts help and when they mislead. Confirmation bias, sunk cost fallacy, survivorship bias, and anchoring affect engineering decisions far more often than most engineers realize.
+  </Card>
+
+  <Card title="Statistical Literacy" icon="approve-check">
+    Stop misinterpreting p-values, drawing conclusions from tiny sample sizes, and confusing correlation with causation. Whether you are evaluating test results, reading research papers, or analyzing sensor data, statistical reasoning is a core engineering skill.
+  </Card>
+
+  <Card title="Honest Data Presentation" icon="warning">
+    Learn how charts and data visualizations can mislead, intentionally or accidentally. Then learn how to present your own data clearly and honestly so your audience can trust your conclusions.
+  </Card>
+</CardGrid>
+
+## Course Structure
+
+Each lesson follows a consistent pattern:
+
+<Steps>
+1. **The Concept**
+   A clear explanation of the thinking error, bias, or statistical pitfall, grounded in how the human brain actually works.
+
+2. **Engineering Examples**
+   Real scenarios from debugging sessions, design reviews, test reports, technical forums, and project planning where the concept shows up.
+
+3. **Recognition Checklist**
+   Concrete signs that you or someone else is falling into the trap, so you can catch it in real time.
+
+4. **Countermeasures**
+   Practical techniques to mitigate the error in your own thinking and in team decision-making.
+
+5. **Exercises**
+   Scenarios to practice identifying and countering each thinking error.
+</Steps>
+
+## Lessons
+
+<CardGrid>
+  <Card title="Lesson 1: How Your Brain Tricks You" icon="star">
+    [How Your Brain Tricks You](./thinking-fast-and-slow). Explore System 1 (fast, intuitive) and System 2 (slow, deliberate) thinking from Kahneman's research. Learn when engineering intuition saves you and when it leads you astray through anchoring, availability heuristic, and substitution.
+  </Card>
+
+  <Card title="Lesson 2: Logical Fallacies in Technical Arguments" icon="document">
+    [Logical Fallacies in Technical Arguments](./logical-fallacies-arguments). A field guide to the 15+ fallacies most common in engineering contexts: ad hominem, false dichotomy, appeal to authority, straw man, appeal to common practice, nirvana fallacy, and more. Each with a real engineering example and a countermeasure.
+  </Card>
+
+  <Card title="Lesson 3: Cognitive Biases in Engineering Decisions" icon="document">
+    [Cognitive Biases in Engineering Decisions](./cognitive-biases-engineering). Confirmation bias, survivorship bias (with Wald's airplane armor story), sunk cost fallacy, Dunning-Kruger effect, hindsight bias, bandwagon effect, and anchoring. How these biases shaped engineering disasters and everyday project failures.
+  </Card>
+
+  <Card title="Lesson 4: Statistics Done Wrong" icon="document">
+    [Statistics Done Wrong](./statistics-done-wrong). Inspired by Alex Reinhart's book. P-value misinterpretation, p-hacking, small sample sizes, overfitting, confounding variables, base rate neglect, and the multiple comparisons problem. "We ran the test 3 times and it passed. Ship it." Why that reasoning fails.
+  </Card>
+
+  <Card title="Lesson 5: How to Lie with Charts and Data" icon="document">
+    [How to Lie with Charts and Data](./lying-with-charts-data). Inspired by Darrell Huff and modern data visualization research. Truncated axes, cherry-picked windows, misleading scales, 3D pie charts, dual y-axes, pictogram abuse, and Simpson's paradox. Learn to spot deception and present your own data honestly.
+  </Card>
+
+  <Card title="Lesson 6: Estimation, Uncertainty, and Confidence" icon="document">
+    [Estimation, Uncertainty, and Confidence](./estimation-and-uncertainty). Fermi estimation, error bars, significant figures, false precision, error propagation, confidence intervals, and measurement uncertainty budgets. "How sure are you?" should be a question you ask about every number.
+  </Card>
+
+  <Card title="Lesson 7: Correlation, Causation, and Evidence" icon="document">
+    [Correlation, Causation, and Evidence](./correlation-causation-evidence). "We added a capacitor and the bug went away" does not mean the capacitor fixed the bug. Post hoc fallacy, confounding variables, controlled experiments, A/B testing, and the hierarchy of evidence.
+  </Card>
+
+  <Card title="Lesson 8: Debugging as Scientific Reasoning" icon="document">
+    [Debugging as Scientific Reasoning](./debugging-as-reasoning). Debugging IS the scientific method applied to code and hardware. Hypothesis-driven debugging, binary search on hypotheses, rubber duck as Socratic method, and common debugging fallacies.
+  </Card>
+
+  <Card title="Lesson 9: Making Better Engineering Decisions" icon="rocket">
+    [Making Better Engineering Decisions](./making-better-decisions). Decision matrices, trade-off analysis, premortems, checklists, reversible vs irreversible decisions, and NASA's lessons from Challenger. A practical framework for every engineering choice.
+  </Card>
+</CardGrid>
+
+## Who Is This Course For?
+
+<Badge text="No prerequisites" variant="success" />
+
+This course does not require any specific technical background. It is useful for:
+
+- **Hardware engineers** who make architecture and component selection decisions
+- **Software engineers** who participate in code reviews and design discussions
+- **Graduate students and researchers** who interpret experimental data and read papers
+- **Engineering managers** who evaluate proposals and make resource allocation decisions
+- **Anyone** who wants to think more clearly about technical problems
+
+The examples lean toward engineering and technology, but the principles apply universally. If you have ever lost an argument you should have won, or won an argument you should have lost, this course will help you understand why.
+
+## Recommended Reading
+
+These books inspired the course and are excellent companions:
+
+| Book | Author | Focus |
+|------|--------|-------|
+| *Thinking, Fast and Slow* | Daniel Kahneman | Dual-process theory, cognitive biases |
+| *How to Lie with Statistics* | Darrell Huff | Data presentation tricks |
+| *Statistics Done Wrong* | Alex Reinhart | Common statistical errors in research |
+| *Logically Fallacious* | Bo Bennett | Comprehensive logical fallacy reference |
+| *The Art of Thinking Clearly* | Rolf Dobelli | Cognitive biases in everyday decisions |
+
+<Copyright />
+
+<TawkWidget />

@@ -1,0 +1,272 @@
+---
+title: "Cognitive Biases in Engineering Decisions"
+description: "Explore the cognitive biases that most commonly affect engineering decisions. Confirmation bias, survivorship bias, sunk cost fallacy, Dunning-Kruger effect, hindsight bias, bandwagon effect, anchoring, and availability heuristic, each illustrated with real engineering examples including NASA case studies."
+contributors: "sam-macharia"
+pubDate: 2026-03-03
+tags: ["critical-thinking", "cognitive-bias", "confirmation-bias", "survivorship-bias", "sunk-cost", "dunning-kruger", "engineering"]
+excerpt: "Your brain takes shortcuts that served your ancestors well on the savanna but create systematic errors in engineering decisions. Learn to recognize confirmation bias, survivorship bias, sunk cost fallacy, and the other biases that have contributed to everything from project overruns to space shuttle disasters."
+heroImage: "https://cdn.siliconwit.com/education/critical-thinking-engineers/cognitive-biases-engineering.png"
+---
+
+import TawkWidget from '../../../../components/TawkWidget.astro';
+import UniversalContentContributors from '../../../../components/UniversalContentContributors.astro';
+import InArticleAd from '../../../../components/InArticleAd.astro';
+import Copyright from '../../../../components/Copyright.astro';
+import BionicText from '../../../../components/BionicText.astro';
+import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/starlight/components';
+
+<UniversalContentContributors 
+  contributors={frontmatter.contributors}
+/>
+
+
+
+import CriticalThinkingEngineersComments from '../../../../components/critical-thinking-engineers/CriticalThinkingEngineersComments.astro';
+
+A cognitive bias is not a random error. It is a systematic, predictable deviation from rational judgment that happens because your brain uses mental shortcuts to process information quickly. In Lesson 1, we saw how System 1 generates fast intuitions. In this lesson, we look at the specific patterns where those intuitions go wrong, and we see how these patterns have shaped real engineering outcomes, from everyday project decisions to catastrophic failures. #CognitiveBias #EngineeringDecisions #CriticalThinking
+
+## Confirmation Bias
+
+**What it is:** The tendency to seek, interpret, and remember information that confirms what you already believe, while ignoring or discounting information that contradicts it.
+
+Confirmation bias is arguably the most dangerous bias for engineers because engineering is fundamentally about testing hypotheses against reality, and confirmation bias corrupts that process.
+
+<Tabs>
+  <TabItem label="In Debugging">
+    You suspect the bug is in the SPI driver. You write test code that exercises the SPI path and, sure enough, you find some odd behavior. You declare the SPI driver guilty and spend two days fixing it. But the actual bug was in the interrupt handler, and the "odd behavior" you found in SPI was a harmless race condition that had been there for years. You found what you were looking for because you only looked where you expected to find it.
+
+    **The fix:** Before investigating your prime suspect, write down at least three alternative hypotheses. Investigate the one you think is least likely first. This forces you to gather disconfirming evidence.
+  </TabItem>
+  <TabItem label="In Testing">
+    You designed a clever algorithm and you are proud of it. When writing tests, you unconsciously choose test cases where it performs well: typical inputs, normal conditions, expected ranges. You avoid the edge cases that might reveal weaknesses. This is not laziness; it is confirmation bias steering your test design.
+
+    **The fix:** Have someone who did not write the code write the tests. Or use adversarial test thinking: "How would I break this?" Fuzzing tools are immune to confirmation bias, which is one reason they find bugs that human testers miss.
+  </TabItem>
+  <TabItem label="In Design Reviews">
+    You proposed the microservice architecture. During the review, you pay close attention to comments that support the approach and mentally discount concerns about operational complexity. When a colleague says "this adds deployment complexity," you think "they just do not understand microservices" instead of genuinely evaluating the concern.
+
+    **The fix:** Assign a formal "red team" role in design reviews. Their job is to argue against the proposal as strongly as possible. This institutionalizes disconfirming evidence.
+  </TabItem>
+</Tabs>
+
+## Survivorship Bias
+
+<InArticleAd />
+
+
+**What it is:** Drawing conclusions only from the examples that survived some selection process, while ignoring the examples that did not.
+
+<Card title="Abraham Wald and the Missing Bullet Holes" icon="star">
+During World War II, the US military examined bombers returning from missions and mapped where they had been hit. The obvious conclusion: reinforce the areas with the most bullet holes. Mathematician Abraham Wald pointed out the critical flaw: they were only looking at planes that made it back. The planes that did not return were hit in different places. The bullet holes on surviving planes showed where a bomber could take damage and still fly. The areas without holes on survivors were the areas where hits were fatal. Reinforce those areas instead.
+
+This is survivorship bias in its purest form. The missing data (destroyed planes) tells a different story than the visible data (surviving planes).
+</Card>
+
+### Survivorship Bias in Engineering
+
+| Scenario | What You See | What You Miss |
+|----------|-------------|---------------|
+| **Startup tech choices** | "Successful companies X, Y, Z all used this database" | The dozens of failed companies that used the same database |
+| **Open source projects** | "This framework has millions of downloads, it must be good" | The millions of developers who tried it, hit problems, and silently switched to something else |
+| **Career advice** | "I dropped out of college and became a successful engineer" | The many dropouts who struggled without the credential |
+| **Component selection** | "We have used this MCU for years without problems" | The projects where it was tried, caused problems, and was quietly replaced |
+
+### How to Counter Survivorship Bias
+
+<Steps>
+1. **Ask: "Where are the failures?"** When someone presents success stories as evidence, ask what happened to the cases that did not succeed. If that data is not available, the success stories are not strong evidence.
+
+2. **Look for the silent evidence.** The loudest signal comes from what is missing, not what is present. Failed projects do not write blog posts. Abandoned libraries do not have active communities. Crashed planes do not return to base.
+
+3. **Seek out failure data deliberately.** Read post-mortems, not just success stories. Talk to teams whose projects failed, not just the ones that shipped.
+</Steps>
+
+## Sunk Cost Fallacy
+
+<InArticleAd />
+
+
+**What it is:** Continuing to invest in a decision because of the resources already spent, rather than evaluating whether future investment is worthwhile.
+
+<Tabs>
+  <TabItem label="Engineering Example">
+    Your team has spent six months building a custom communication protocol. It is becoming clear that MQTT or CoAP would have been a better choice. But the team lead says: "We have already invested six months. We cannot throw that away." The six months are gone regardless of what you decide next. The only rational question is: "From this point forward, which option gives us the best outcome?" If adopting MQTT means shipping three months sooner and having better documentation, the sunk cost of the custom protocol is irrelevant.
+  </TabItem>
+  <TabItem label="Why It Is So Powerful">
+    Sunk cost fallacy is emotionally compelling because abandoning past work feels like admitting a mistake. Engineers are problem-solvers by nature, and switching feels like giving up. But recognizing a better path forward is not failure; it is good engineering judgment. The Concorde supersonic jet is often cited as the canonical example: both the British and French governments continued funding it long after it was clear the project would never be commercially viable, because too much had already been spent to "waste."
+  </TabItem>
+  <TabItem label="How to Counter">
+    Use the "clean slate" test: "If we were starting from scratch today, with everything we know now, would we choose this approach?" If the answer is no, the sunk costs should not change that conclusion. Some organizations formalize this with "kill criteria" defined at project start: specific conditions under which the project will be canceled, decided before emotional attachment builds.
+  </TabItem>
+</Tabs>
+
+## Dunning-Kruger Effect
+
+<InArticleAd />
+
+
+**What it is:** People with low competence in a domain tend to overestimate their ability, while people with high competence tend to slightly underestimate theirs.
+
+<Card title="The Confidence-Competence Curve" icon="warning">
+When you first learn a new technology, everything seems straightforward. You complete the tutorial, build a simple project, and feel confident. This is the "peak of Mount Stupid" in popular depictions of the Dunning-Kruger effect. As you gain more experience, you discover the complexity you did not know existed: edge cases, scaling challenges, security implications, operational concerns. Your confidence drops because you now understand how much you do not know. Eventually, as expertise deepens, confidence returns, but it is calibrated confidence backed by genuine understanding.
+</Card>
+
+### How It Shows Up in Engineering
+
+| Stage | Confidence | Competence | Danger |
+|-------|-----------|------------|--------|
+| **Beginner** | "I learned React in a weekend, I can build anything" | Completed a tutorial | Overcommitting, ignoring best practices |
+| **Intermediate** | "The more I learn, the less I feel I know" | Several projects shipped | Imposter syndrome, under-contributing in discussions |
+| **Expert** | "I know what I know and what I do not know" | Years of deep experience | Assuming others share your knowledge level |
+
+### The Practical Risk
+
+The Dunning-Kruger effect is dangerous in team settings because the least qualified person in the room is often the most confident. In meetings where decisions are influenced by displayed confidence (which is most meetings), this creates a systematic bias toward the opinions of people who know the least about the subject.
+
+**Counter:** Evaluate proposals on evidence and specifics, not on the confidence of the presenter. Ask for concrete examples, edge case analysis, and failure mode discussion. Confident claims that cannot withstand specific questioning are a red flag.
+
+## Hindsight Bias
+
+<InArticleAd />
+
+
+**What it is:** After an outcome is known, believing that you "knew it all along" or that the outcome was predictable.
+
+<Tabs>
+  <TabItem label="Engineering Example">
+    A production server crashes because of a memory leak in a third-party library. In the post-mortem, someone says: "I always thought that library was risky. We should have monitored memory usage from the start." But before the crash, no one raised concerns about that specific library, and monitoring memory for every dependency was not part of the plan. After the crash, the cause seems obvious. Before the crash, it was one of hundreds of potential failure modes.
+  </TabItem>
+  <TabItem label="Why It Matters">
+    Hindsight bias corrupts post-mortems and learning. If the team believes the failure was "obvious," they will blame the people who missed it rather than improving the system that allowed it. The lesson becomes "someone should have been smarter" instead of "we need better monitoring, automated alerts, or dependency review processes."
+  </TabItem>
+  <TabItem label="How to Counter">
+    In post-mortems, enforce the rule: "Given what we knew at the time, not what we know now, was this decision reasonable?" Focus on systemic improvements (automated checks, better monitoring, redundancy) rather than blaming individuals for failing to predict the future.
+  </TabItem>
+</Tabs>
+
+## Bandwagon Effect
+
+<InArticleAd />
+
+
+**What it is:** Adopting a belief, technology, or approach because many others have adopted it, rather than because of independent evaluation.
+
+<Card title="Technology Hype Cycles" icon="setting">
+Every few years, a new technology becomes the default answer to every problem: microservices, blockchain, machine learning, serverless. At the peak of the hype cycle, teams adopt the technology not because they evaluated its fit, but because "everyone is doing it" and they fear being left behind. This leads to over-engineering (using microservices for a simple CRUD app), misapplication (putting data on a blockchain when a database would suffice), and unnecessary complexity.
+
+The bandwagon effect is especially strong when combined with fear of missing out (FOMO) and social proof. Conference talks, blog posts, and job listings all reinforce the message: if you are not using X, you are falling behind.
+</Card>
+
+**Counter:** For every technology decision, require a written justification that answers: "Why is this the right tool for our specific problem, constraints, and team?" If the justification reduces to "it is popular" or "everyone is using it," that is a bandwagon argument, not a technical one.
+
+## Availability Heuristic and Anchoring (Revisited)
+
+<InArticleAd />
+
+
+We covered these in Lesson 1 as System 1 heuristics. Here we add engineering context that shows their real-world impact.
+
+### Availability Heuristic in Risk Assessment
+
+Engineers systematically overestimate risks they have recently experienced and underestimate risks they have not. After a security breach, security concerns dominate every design discussion for months, even for systems with no internet connectivity. Meanwhile, risks that have not materialized recently (power supply failures, connector corrosion, firmware corruption) get neglected.
+
+**Organizational fix:** Maintain a risk register that is reviewed regularly and updated based on data, not on recent memory. Weight risks by measured probability and impact, not by how easily examples come to mind.
+
+### Anchoring in Project Estimation
+
+The first estimate in any planning discussion anchors all subsequent estimates. Research consistently shows that even professional estimators are affected by arbitrary anchors. If a manager says "this should take about a week" before the team estimates, the team's estimate will be pulled toward one week regardless of the actual complexity.
+
+**Organizational fix:** Use planning poker or blind estimation (everyone writes their estimate before anyone shares). Compare the spread. Large disagreements indicate that some team members see complexity that others do not, which is exactly the information you need.
+
+## Case Study: Cognitive Bias and the Space Shuttle Disasters
+
+<InArticleAd />
+
+
+The Challenger and Columbia disasters illustrate how cognitive biases operate at the organizational level, not just the individual level.
+
+<Tabs>
+  <TabItem label="Challenger (1986)">
+    **Confirmation bias:** NASA engineers had data showing that O-ring erosion occurred at low temperatures. However, they only analyzed launches where erosion was observed, not launches where it was not. When the full dataset was examined, the correlation between cold temperature and O-ring failure was clear.
+
+    **Normalization of deviance:** O-ring erosion had occurred on previous flights without catastrophic failure. Each successful flight with erosion lowered the perceived risk, even though the engineering specification said zero erosion was acceptable. Repeated "success" despite violating specifications created a false sense of safety.
+
+    **Groupthink and authority pressure:** Engineers at Morton Thiokol recommended against launching in the cold. Under pressure from NASA management, the recommendation was reversed. The burden of proof was shifted: instead of proving it was safe to launch (the normal standard), engineers were asked to prove it was unsafe.
+  </TabItem>
+  <TabItem label="Columbia (2003)">
+    **WYSIATI (What You See Is All There Is):** Foam had struck the shuttle's thermal tiles on previous missions. Engineers requested satellite imagery to assess the damage on Columbia's wing. The request was denied by management, partly because foam strikes were classified as a "turnaround issue" (maintenance) rather than a "safety of flight" concern. Without the imagery, everyone worked with incomplete information and assumed the best.
+
+    **Anchoring:** Previous foam strikes had not caused catastrophic damage. This historical anchor dominated the risk assessment, even though the Columbia strike was significantly larger than previous ones.
+
+    **Hindsight correction:** After the disaster, it seemed "obvious" that foam striking a fragile tile at hundreds of miles per hour could cause fatal damage. Before the disaster, it was classified as routine maintenance.
+  </TabItem>
+</Tabs>
+
+These case studies show that biases are not just individual weaknesses. They become embedded in organizational culture, decision processes, and risk assessment frameworks. Addressing them requires systemic changes, not just individual awareness.
+
+## Debiasing Strategies for Engineering Teams
+
+<InArticleAd />
+
+
+Individual awareness helps, but organizational practices are more reliable because they do not depend on individuals remembering to check their biases in the moment.
+
+<CardGrid>
+  <Card title="Pre-mortem Analysis" icon="star">
+    Before committing to a plan, imagine it is a year from now and the project has failed. Each team member independently writes down why it failed. This surfaces risks that groupthink and confirmation bias would normally suppress. Research shows pre-mortems increase the ability to identify reasons for future outcomes by 30%.
+  </Card>
+
+  <Card title="Red Team / Blue Team" icon="setting">
+    Assign a team to argue against the proposal as strongly as possible. This institutionalizes the search for disconfirming evidence. The red team's job is to find flaws, not to be balanced. The blue team defends. The decision-makers evaluate both arguments.
+  </Card>
+
+  <Card title="Decision Journals" icon="approve-check">
+    Record significant decisions, the reasoning behind them, and the confidence level. Review quarterly. Over time, you build data on where your judgment is calibrated and where it is systematically off. This is the engineer's equivalent of a flight recorder.
+  </Card>
+
+  <Card title="Checklists" icon="warning">
+    Aviation learned that checklists prevent experienced pilots from skipping steps that "feel" unnecessary. Engineering can adopt the same approach. Design review checklists, security review checklists, and deployment checklists reduce the influence of cognitive biases by making critical steps explicit rather than relying on memory and judgment.
+  </Card>
+</CardGrid>
+
+## Exercises
+
+<InArticleAd />
+
+
+### Exercise 1: Bias Audit
+
+Pick a recent project decision (architecture choice, tool selection, scope change). Identify at least two cognitive biases that may have influenced the outcome. How would the decision have been different if those biases had been countered?
+
+### Exercise 2: Survivorship Bias Hunt
+
+Find a "lessons learned" article or conference talk about a successful project. Identify what survivorship bias might be hiding. What could have gone wrong but did not? Would the same approach work in a different context?
+
+### Exercise 3: Sunk Cost Detector
+
+Is your team currently investing effort in something primarily because of past investment rather than future value? Apply the clean slate test: "If we were starting today, would we choose this path?" If not, what would it take to change course?
+
+### Exercise 4: Dunning-Kruger Self-Assessment
+
+For five technologies or skills you use regularly, rate your competence on a 1-10 scale. Then, for each one, list three things you do not know or cannot do. Does the exercise change your self-assessment? The ability to list specific unknowns is itself a sign of genuine competence.
+
+### Exercise 5: Anchoring Experiment
+
+In your next team estimation session, ask each person to write down their estimate independently before sharing. Compare the estimates. If they are tightly clustered, was an anchor set beforehand (a manager's comment, a previous estimate, a "should be about X" statement)? If they vary widely, discuss why and what each person is seeing that the others are not.
+
+## What Comes Next
+
+<InArticleAd />
+
+
+In [Lesson 4: Statistics Done Wrong](./statistics-done-wrong), we move from cognitive biases to statistical errors. You will learn why "we ran the test 3 times and it passed" is not sufficient evidence, what p-values actually mean (and what they do not mean), and how small sample sizes, confounding variables, and p-hacking corrupt engineering conclusions.
+
+<CriticalThinkingEngineersComments />
+
+
+
+<InArticleAd />
+<TawkWidget />
+<Copyright />

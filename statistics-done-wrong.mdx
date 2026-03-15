@@ -57,6 +57,33 @@ You are comparing two sorting algorithms on your embedded system. You run each 1
 
 **What it is:** Running many statistical tests, trying different subsets of data, adjusting parameters, or selectively reporting results until you find something with p < 0.05.
 
+The following simulation shows how easy it is to find "significant" results from pure noise. We test 20 completely random hypotheses (no real effect exists) and count how many come back with p < 0.05.
+
+```python title="p_hacking_simulation.py"
+import numpy as np
+from scipy import stats
+
+np.random.seed(42)
+n_hypotheses = 20
+n_samples = 30  # samples per group
+alpha = 0.05
+false_positives = 0
+
+print(f"Testing {n_hypotheses} random hypotheses (NO real effect)...\n")
+for i in range(n_hypotheses):
+    group_a = np.random.normal(loc=0, scale=1, size=n_samples)
+    group_b = np.random.normal(loc=0, scale=1, size=n_samples)
+    t_stat, p_val = stats.ttest_ind(group_a, group_b)
+    if p_val < alpha:
+        false_positives += 1
+        print(f"  Hypothesis {i+1}: p = {p_val:.4f}  ** 'SIGNIFICANT' (false positive)")
+
+print(f"\nResults: {false_positives} out of {n_hypotheses} tests were 'significant' at p < {alpha}")
+print(f"Expected by chance: {n_hypotheses * alpha:.0f}")
+print(f"\nLesson: test enough random things and you WILL find 'significant' results.")
+print(f"This is p-hacking. The 'discoveries' are pure noise.")
+```
+
 <Tabs>
   <TabItem label="How It Happens">
     You are testing whether a new compiler optimization improves performance. You run benchmarks on 20 different code patterns. Most show no significant difference. But three patterns show p < 0.05 improvement. You report those three and conclude "the optimization significantly improves performance for computational kernels."
@@ -101,6 +128,31 @@ There is no universal answer, but some guidelines for engineering contexts:
 | **Sensor calibration** | 50+ readings per calibration point | Sensor noise, environmental variation |
 
 ### The "We Ran It 3 Times" Problem
+
+How often will 3 tests miss a real defect? The simulation below draws from a population with a known 10% defect rate and checks how many batches of 3 tests come back clean.
+
+```python title="small_sample_trap.py"
+import numpy as np
+
+np.random.seed(42)
+n_simulations = 10000
+n_tests = 3
+defect_rate = 0.10
+
+# Each simulation: draw n_tests items, each defective with probability defect_rate
+results = np.random.random((n_simulations, n_tests)) < defect_rate
+batches_all_pass = np.sum(~np.any(results, axis=1))
+
+miss_pct = 100 * batches_all_pass / n_simulations
+theory_pct = 100 * (1 - defect_rate) ** n_tests
+
+print(f"Simulated {n_simulations} batches of {n_tests} tests (true defect rate = {defect_rate*100:.0f}%)\n")
+print(f"Batches where ALL {n_tests} tests passed (defect hidden): {batches_all_pass} / {n_simulations}")
+print(f"Simulated miss rate:   {miss_pct:.1f}%")
+print(f"Theoretical miss rate: {theory_pct:.1f}%  [= (1 - {defect_rate})^{n_tests}]")
+print(f"\nWith only {n_tests} tests, you miss a {defect_rate*100:.0f}% defect rate ~{theory_pct:.0f}% of the time.")
+print(f"'We tested 3 boards and they all passed' is dangerously weak evidence.")
+```
 
 <Tabs>
   <TabItem label="The Scenario">

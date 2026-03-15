@@ -62,6 +62,42 @@ The most common and most effective chart deception. By starting the y-axis at a 
   </TabItem>
 </Tabs>
 
+The following code plots the same sales data two ways. The first chart starts the y-axis at zero, giving an honest view of 6% total growth. The second chart starts at 990, making that same modest growth look dramatic.
+
+```python title="honest_vs_misleading_chart.py"
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+sales = [1000, 1020, 1015, 1040, 1035, 1060]
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+# Honest chart: y-axis starts at 0
+ax1.bar(months, sales, color='steelblue')
+ax1.set_ylim(0, 1200)
+ax1.set_title('Honest Chart (y-axis from 0)')
+ax1.set_ylabel('Monthly Sales (units)')
+
+# Misleading chart: y-axis starts at 990
+ax2.bar(months, sales, color='tomato')
+ax2.set_ylim(990, 1070)
+ax2.set_title('Misleading Chart (y-axis from 990)')
+ax2.set_ylabel('Monthly Sales (units)')
+
+plt.tight_layout()
+plt.savefig('honest_vs_misleading.png', dpi=150)
+print("Saved: honest_vs_misleading.png")
+
+actual_growth = 100 * (sales[-1] - sales[0]) / sales[0]
+visual_ratio = (sales[-1] - 990) / (sales[0] - 990)
+print(f"\nActual growth from Jan to Jun: {actual_growth:.1f}%")
+print(f"Visual bar height ratio (misleading chart): {visual_ratio:.1f}x")
+print(f"The misleading chart makes a {actual_growth:.1f}% increase look like a {visual_ratio:.1f}x increase.")
+```
+
 ## Trick 2: Cherry-Picked Time Windows
 
 <InArticleAd />

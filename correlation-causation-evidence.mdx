@@ -83,6 +83,41 @@ The classic example: ice cream sales and drowning rates both increase in summer.
 
 The key question to ask when you see a correlation is: **"What else could explain this?"** If you can think of a plausible third variable that drives both the "cause" and the "effect," you have found a potential confounder. Getting into the habit of asking this question is more valuable than any statistical technique.
 
+This simulation generates ice cream sales and drowning incidents that are both driven by temperature (the hidden confounder). The two variables appear correlated, but once you account for temperature, the relationship vanishes.
+
+```python title="confounding_variable_demo.py"
+import numpy as np
+from scipy import stats
+
+np.random.seed(42)
+n_days = 200
+
+# Temperature is the confounder (in Celsius)
+temperature = np.random.normal(loc=25, scale=8, size=n_days)
+
+# Ice cream sales driven by temperature + noise
+ice_cream = 50 + 3.0 * temperature + np.random.normal(0, 10, n_days)
+
+# Drowning incidents driven by temperature + noise
+drowning = 1.0 + 0.15 * temperature + np.random.normal(0, 1.5, n_days)
+
+# Raw correlation between ice cream and drowning
+r_raw, p_raw = stats.pearsonr(ice_cream, drowning)
+print(f"Raw correlation (ice cream vs drowning):  r = {r_raw:.3f}, p = {p_raw:.6f}")
+
+# Partial correlation: remove temperature's effect from both
+slope_ic, intercept_ic, _, _, _ = stats.linregress(temperature, ice_cream)
+slope_dr, intercept_dr, _, _, _ = stats.linregress(temperature, drowning)
+residual_ic = ice_cream - (slope_ic * temperature + intercept_ic)
+residual_dr = drowning - (slope_dr * temperature + intercept_dr)
+r_partial, p_partial = stats.pearsonr(residual_ic, residual_dr)
+print(f"Partial correlation (temperature removed): r = {r_partial:.3f}, p = {p_partial:.6f}")
+
+print(f"\nBefore controlling for temperature: strong correlation (r={r_raw:.3f})")
+print(f"After controlling for temperature:  correlation vanishes (r={r_partial:.3f})")
+print(f"Temperature was the confounder all along.")
+```
+
 ### How to Deal With Confounders
 
 <Steps>
@@ -190,6 +225,38 @@ Not all evidence is created equal. Here is a rough hierarchy, from weakest to st
 When someone makes a claim, mentally place it on this hierarchy. "Stack Overflow says this library is faster" is barely above anecdote. "We benchmarked both libraries on our hardware with our workload and library B is 2.3x faster (n=100 runs, p less than 0.01)" is a controlled experiment.
 
 You do not need to run systematic reviews before choosing a library. But you should be aware of how strong your evidence is, and calibrate your confidence accordingly.
+
+The next simulation shows how cherry-picking a single data point from a noisy upward trend can lead to the opposite conclusion. One person looks at a dip and declares "it is going down," while the full trend tells a completely different story.
+
+```python title="anecdotal_vs_trend.py"
+import numpy as np
+
+np.random.seed(42)
+n_months = 24
+months = np.arange(n_months)
+
+# Clear upward trend with noise
+trend = 100 + 1.5 * months
+noise = np.random.normal(0, 5, n_months)
+data = trend + noise
+
+# Find a noticeable dip (a point lower than its predecessor)
+dips = np.where(np.diff(data) < -3)[0] + 1  # indices where data dropped
+cherry_pick = dips[len(dips) // 2]  # pick a dip near the middle
+
+# Full trend: linear regression
+slope, intercept = np.polyfit(months, data, 1)
+total_change = 100 * (data[-1] - data[0]) / data[0]
+local_change = 100 * (data[cherry_pick] - data[cherry_pick - 1]) / data[cherry_pick - 1]
+
+print(f"Full dataset: {n_months} months of measurements")
+print(f"Linear trend slope: +{slope:.2f} units/month")
+print(f"Overall change (first to last): {total_change:+.1f}%\n")
+print(f"Cherry-picked point (month {cherry_pick}): {local_change:+.1f}% drop from previous month")
+print(f"\nAnecdotal claim: 'See, month {cherry_pick} dropped {abs(local_change):.1f}%! It is declining!'")
+print(f"Full trend:       'The data rose {total_change:.1f}% over {n_months} months.'")
+print(f"\nOne data point is not a trend. Always look at the full picture.")
+```
 
 ### The "N=1" Problem
 

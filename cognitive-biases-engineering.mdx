@@ -64,6 +64,43 @@ During World War II, the US military examined bombers returning from missions an
 This is survivorship bias in its purest form. The missing data (destroyed planes) tells a different story than the visible data (surviving planes).
 </Card>
 
+This simulation recreates the Wald airplane scenario. Each plane gets random bullet hits across 5 zones, but planes hit in the engine crash and never return. The data from surviving planes shows hits everywhere except the engine, which is exactly where armor is most needed.
+
+```python title="survivorship_bias_simulation.py"
+import numpy as np
+
+np.random.seed(42)
+n_planes = 1000
+zones = ['Fuselage', 'Wings', 'Tail', 'Cockpit', 'Engine']
+n_zones = len(zones)
+
+# Each plane gets random hits (0 or 1) in each zone
+hit_probability = 0.3
+hits = np.random.random((n_planes, n_zones)) < hit_probability
+
+# Planes hit in the engine (zone index 4) are destroyed
+engine_hit = hits[:, 4]
+survived = ~engine_hit
+n_survived = np.sum(survived)
+n_destroyed = np.sum(engine_hit)
+
+# Analysts only see the surviving planes
+surviving_hits = hits[survived]
+hit_counts = np.sum(surviving_hits, axis=0)
+
+print(f"Total planes sent: {n_planes}")
+print(f"Survived: {n_survived}  |  Destroyed (engine hit): {n_destroyed}\n")
+print("Hit counts on SURVIVING planes (what analysts see):")
+for zone, count in zip(zones, hit_counts):
+    bar = '#' * (count // 5)
+    print(f"  {zone:10s}: {count:3d} hits  {bar}")
+
+print(f"\nNaive conclusion: 'Armor the fuselage and wings, they take the most hits!'")
+print(f"Wald's insight:   'The engine has ZERO hits on survivors because engine hits")
+print(f"                   are FATAL. Armor the engine.'")
+print(f"\nThe missing data (destroyed planes) tells the real story.")
+```
+
 ### Survivorship Bias in Engineering
 
 | Scenario | What You See | What You Miss |

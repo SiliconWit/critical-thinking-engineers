@@ -174,6 +174,47 @@ $$
 
 So $\tau = RC = 10\text{k} \times 100\text{n} = 1.0$ ms with about 11.2% uncertainty. That means $\tau = 1.0 \pm 0.11$ ms.
 
+The following Monte Carlo simulation computes the RC time constant and its uncertainty by sampling component values from their tolerance distributions. It then compares the result to the analytical formula above.
+
+```python title="error_propagation_monte_carlo.py"
+import numpy as np
+
+np.random.seed(42)
+n_samples = 100000
+
+# Component nominal values and tolerances
+R_nom = 10e3      # 10 kohm
+R_tol = 0.05      # 5%
+C_nom = 100e-9    # 100 nF
+C_tol = 0.10      # 10%
+
+# Monte Carlo: sample from uniform distributions within tolerance bands
+R_samples = R_nom * (1 + R_tol * np.random.uniform(-1, 1, n_samples))
+C_samples = C_nom * (1 + C_tol * np.random.uniform(-1, 1, n_samples))
+tau_samples = R_samples * C_samples
+
+# Monte Carlo statistics
+tau_mean = np.mean(tau_samples)
+tau_std = np.std(tau_samples)
+tau_lo, tau_hi = np.percentile(tau_samples, [2.5, 97.5])
+
+# Analytical propagation (quadrature of relative uncertainties)
+tau_nominal = R_nom * C_nom
+rel_unc = np.sqrt(R_tol**2 + C_tol**2)
+tau_analytical_std = tau_nominal * rel_unc
+
+print(f"R = {R_nom/1e3:.0f} kohm +/- {R_tol*100:.0f}%,  C = {C_nom*1e9:.0f} nF +/- {C_tol*100:.0f}%")
+print(f"Nominal tau = RC = {tau_nominal*1e3:.2f} ms\n")
+print(f"Monte Carlo ({n_samples} samples):")
+print(f"  Mean:    {tau_mean*1e3:.4f} ms")
+print(f"  Std:     {tau_std*1e3:.4f} ms")
+print(f"  95% CI:  [{tau_lo*1e3:.4f}, {tau_hi*1e3:.4f}] ms\n")
+print(f"Analytical propagation:")
+print(f"  Std:     {tau_analytical_std*1e3:.4f} ms  (relative = {rel_unc*100:.1f}%)")
+print(f"\nThe Monte Carlo and analytical results agree closely.")
+print(f"Your 1.0 ms time constant is really 1.0 +/- {tau_std*1e3:.2f} ms.")
+```
+
 ### The Simple Rule for Sums
 
 For addition and subtraction, absolute uncertainties add in quadrature:

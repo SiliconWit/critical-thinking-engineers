@@ -82,6 +82,22 @@ The goal is never to get the exact answer. The goal is to build the habit of che
 <InArticleAd />
 
 
+```text
+  Error Bar Interpretation
+  ──────────────────────────────────────────────────────────
+
+  OVERLAPPING (cannot claim difference):
+      2.9       3.2       3.5       3.8
+       ├────── A ──────┤
+                  ├────── B ──────┤
+                  ^ overlap zone: ranges intersect
+
+  NON-OVERLAPPING (strong evidence of difference):
+      2.9  3.1  3.3           3.7  3.9  4.1
+       ├── A ──┤               ├── B ──┤
+                   ^ clear gap: no overlap
+```
+
 An error bar on a graph is not decoration. It tells you the range within which the true value probably lies. When you see a data point at 3.2 V with error bars stretching from 3.0 V to 3.4 V, the researchers are saying: "We measured 3.2 V, but the real value could reasonably be anywhere in that range."
 
 Most people look at data plots and ignore the error bars entirely. They compare the central points and draw conclusions. This is a mistake.

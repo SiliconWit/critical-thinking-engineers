@@ -35,6 +35,29 @@ The p-value is the most misunderstood number in engineering and science. Let us 
 A p-value is the probability of observing data at least as extreme as what you measured, assuming the null hypothesis is true. That is it. It does not tell you the probability that your hypothesis is correct. It does not tell you the probability that the result is "real." It does not tell you the size or importance of the effect.
 </Card>
 
+```text
+  What a P-Value Actually Measures
+  ──────────────────────────────────────────────────────────
+  Assume: null hypothesis is true (no real effect)
+       │
+       ▼
+  Run your experiment, collect data
+       │
+       ▼
+  p-value = probability of seeing data
+            THIS EXTREME or more extreme,
+            if there truly is no effect
+       │
+       ▼
+  p < 0.05 means: this result would happen
+  by pure chance less than 5% of the time
+
+  IT DOES NOT MEAN:
+  ✗ "5% chance the result is random"
+  ✗ "95% chance our hypothesis is correct"
+  ✗ "The effect is large or important"
+```
+
 ### What p = 0.05 Does NOT Mean
 
 | Common Misinterpretation | Why It Is Wrong |

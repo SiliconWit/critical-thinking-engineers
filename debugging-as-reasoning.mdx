@@ -52,6 +52,20 @@ Random debugging, where you change things without a clear hypothesis, is like se
 
 Here is the loop, spelled out as a concrete process:
 
+```mermaid
+%%{init: {'flowchart': {'curve': 'linear'}}}%%
+flowchart TD
+    A(["Reproduce the bug\nreliably"]) --> B["Observe carefully\nWhat exactly happens?"]
+    B --> C["Form a hypothesis\nPropose a specific cause"]
+    C --> D["Make a prediction\nWhat else should be true\nif hypothesis is correct?"]
+    D --> E["Test the prediction\nRun one experiment"]
+    E --> F{"Does prediction\nmatch reality?"}
+    F -->|Yes| G["Strong evidence\nDig deeper for exact cause"]
+    F -->|No| H["Hypothesis ruled out\nLearn from what you saw"]
+    G --> I(["Bug found and fixed"])
+    H --> C
+```
+
 <Steps>
 1. **Reproduce the bug.** If you cannot reliably trigger the bug, you cannot test hypotheses about it. Spend time here first. Find the minimum set of inputs or conditions that trigger the problem.
 

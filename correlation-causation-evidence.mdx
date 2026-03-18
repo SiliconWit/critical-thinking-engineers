@@ -211,6 +211,17 @@ Anecdotal evidence is not worthless. It can suggest hypotheses and point you in 
 
 Not all evidence is created equal. Here is a rough hierarchy, from weakest to strongest:
 
+```mermaid
+flowchart TD
+    A[Systematic review\nMultiple independent studies] --> B[Controlled experiment\nRandomized, confounders held constant]
+    B --> C[Observational study\nCorrelation across many cases]
+    C --> D[Case study\nDetailed single instance]
+    D --> E[Anecdotal evidence\nSingle data point]
+    E --> F[Expert opinion\nExperience-based, subject to bias]
+    style A fill:#f0fdf4,stroke:#84cc16
+    style F fill:#fef3c7,stroke:#f59e0b
+```
+
 <Steps>
 1. **Expert opinion.** "I think this is the right approach because I have been doing this for 20 years." Valuable, but subject to bias and limited experience.
 2. **Anecdotal evidence.** "This worked for me on my last project." A single data point, possibly unrepresentative.

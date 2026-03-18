@@ -291,6 +291,22 @@ In a design meeting, the best technical solution does not always win. The most p
 
 Use this during your next technical discussion:
 
+```mermaid
+flowchart TD
+    A[Evaluate the argument] --> B{Attacking a person\nnot the idea?}
+    B -- Yes --> C[Ad Hominem / Genetic Fallacy]
+    B -- No --> D{Position accurately\nrepresented?}
+    D -- No --> E[Straw Man]
+    D -- Yes --> F{Only two\noptions presented?}
+    F -- Yes --> G[False Dichotomy]
+    F -- No --> H{Data cherry-picked?}
+    H -- Yes --> I[Texas Sharpshooter]
+    H -- No --> J{Good solution rejected\nbecause not perfect?}
+    J -- Yes --> K[Nirvana Fallacy]
+    J -- No --> L[Likely sound argument]
+    style L fill:#f0fdf4,stroke:#84cc16
+```
+
 <Steps>
 1. **Is the argument attacking a person instead of an idea?** (Ad Hominem, Genetic Fallacy)
 

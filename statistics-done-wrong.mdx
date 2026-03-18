@@ -107,6 +107,19 @@ print(f"\nLesson: test enough random things and you WILL find 'significant' resu
 print(f"This is p-hacking. The 'discoveries' are pure noise.")
 ```
 
+```mermaid
+flowchart TD
+    A[Run many tests at p = 0.05] --> B{Some show\np less than 0.05?}
+    B -- Yes --> C[Report only\nsignificant results]
+    C --> D[Conclusion looks strong\nbut may be noise]
+    B -- No --> E[Collect more data\nor try different metrics]
+    E --> A
+
+    F[Prevention] --> G[Pre-register analysis plan]
+    F --> H[Apply Bonferroni correction]
+    F --> I[Report ALL results]
+```
+
 <Tabs>
   <TabItem label="How It Happens">
     You are testing whether a new compiler optimization improves performance. You run benchmarks on 20 different code patterns. Most show no significant difference. But three patterns show p < 0.05 improvement. You report those three and conclude "the optimization significantly improves performance for computational kernels."

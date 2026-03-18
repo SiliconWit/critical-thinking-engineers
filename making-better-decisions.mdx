@@ -132,6 +132,16 @@ A postmortem is what you do after a project fails. A premortem is what you do be
 
 The technique comes from psychologist Gary Klein, and it was popularized by Daniel Kahneman. Here is how it works:
 
+```mermaid
+flowchart TD
+    A[Gather team at project start] --> B[Assume the project has failed completely]
+    B --> C[Each person independently\nwrites down reasons for failure]
+    C --> D[Share and discuss all reasons]
+    D --> E[Prioritize risks by likelihood and impact]
+    E --> F[Create mitigation plan for top risks]
+    F --> G[Proceed with project, risks visible]
+```
+
 <Card title="The Premortem Process" icon="rocket">
 Gather the team at the start of the project. Say: "Imagine it is six months from now and this project has failed completely. It is a disaster. Now, each of you independently write down the reasons why it failed."
 
@@ -252,6 +262,15 @@ Not all code reviews are equal. A rubber-stamp review ("looks good to me" after 
 
 
 Jeff Bezos introduced a useful framework: classify decisions as "one-way doors" (irreversible) or "two-way doors" (reversible), and invest effort proportionally.
+
+```mermaid
+flowchart TD
+    A[Decision to make] --> B{Reversible?}
+    B -- One-way door\nirreversible --> C[Gather data, prototype,\nget second opinions]
+    B -- Two-way door\nreversible --> D[Decide quickly,\ncorrect later if needed]
+    C --> E[High investment\nin getting it right]
+    D --> F[Move fast,\nlearn from outcome]
+```
 
 ### One-Way Door Decisions
 

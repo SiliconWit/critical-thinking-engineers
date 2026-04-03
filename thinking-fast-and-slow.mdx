@@ -10,7 +10,6 @@ heroImage: "https://cdn.siliconwit.com/education/critical-thinking-engineers/thi
 
 import TawkWidget from '../../../../components/TawkWidget.astro';
 import UniversalContentContributors from '../../../../components/UniversalContentContributors.astro';
-import PodcastEmbed from '../../../../components/PodcastEmbed.astro';
 import InArticleAd from '../../../../components/InArticleAd.astro';
 import Copyright from '../../../../components/Copyright.astro';
 import BionicText from '../../../../components/BionicText.astro';
@@ -23,6 +22,8 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 />
 
 
+
+import PodcastEmbed from '../../../../components/PodcastEmbed.astro';
 
 import CriticalThinkingEngineersComments from '../../../../components/critical-thinking-engineers/CriticalThinkingEngineersComments.astro';
 
@@ -64,7 +65,7 @@ Kahneman describes two modes of thinking that operate in every human mind. He ca
 ```
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[Stimulus] --> B[System 1\nfast, automatic]
     B --> C{System 2\ncheck?}
     C -- Endorses\nno effort --> D[Accept intuition]

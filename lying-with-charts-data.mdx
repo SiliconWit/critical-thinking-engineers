@@ -36,16 +36,16 @@ The most common and most effective chart deception. By starting the y-axis at a 
     Imagine a bar chart comparing two MCU power consumption measurements: Chip A draws 48 mA and Chip B draws 52 mA. If the y-axis starts at zero, the bars look nearly identical (they differ by about 8%). But if the y-axis starts at 45 mA, Chip B's bar appears roughly four times taller than Chip A's bar. The visual impression is a massive difference when the actual difference is modest.
 
     ```text
-    Misleading (y-axis starts at 45):    Honest (y-axis starts at 0):
+    Misleading (y-axis starts at 45):     Honest (y-axis starts at 0):
 
-    52|          ████                     52|  ████  ████
-    50|          ████                     40|  ████  ████
-    48|  ████    ████                     30|  ████  ████
-    46|  ████    ████                     20|  ████  ████
-      ──────────────                     10|  ████  ████
-       Chip A  Chip B                     0|  ████  ████
-                                           ──────────────
-    "Chip B uses way more power!"           Chip A  Chip B
+    52|          ████                     50|  ████    ████
+    50|          ████                     40|  ████    ████
+    48|  ████    ████                     30|  ████    ████
+    46|  ████    ████                     20|  ████    ████
+       ──────────────                     10|  ████    ████
+        Chip A  Chip B                     0|  ████    ████
+                                             ──────────────
+    "Chip B uses way more power!"             Chip A  Chip B
                                           "About the same."
     ```
   </TabItem>
@@ -279,6 +279,10 @@ Now that you know how charts can mislead, here is how to make sure your own visu
 
 8. **Use color and size carefully.** Color should encode meaningful categories, not just decoration. Size should scale linearly with the data value.
 </Steps>
+
+:::tip[Instrument it]
+A monitoring dashboard, like the live ones at [siliconwit.io/public-devices](https://siliconwit.io/public-devices), is just charts of sensor data, so every trick in this lesson can mislead the operator who trusts it. A truncated y-axis turns normal drift into a crisis, a smoothed line hides the spike that was the real fault, and a dual axis invents a correlation two sensors do not share. When you present live data to someone who will act on it, show the zero, keep the raw trace next to the smoothed one, and show the uncertainty. An honest instrument is one whose readings you can act on without second-guessing.
+:::
 
 ## A Checklist for Reading Charts
 

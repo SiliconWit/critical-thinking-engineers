@@ -310,6 +310,10 @@ You are optimizing firmware performance and test 15 different compiler flags. Us
 
 **False Discovery Rate (FDR) control:** A less conservative approach that controls the expected proportion of false discoveries among all discoveries. The Benjamini-Hochberg procedure is the most common method.
 
+:::tip[Instrument it]
+Sensor data lies in quiet, statistical ways. Sample a vibration signal too slowly and a real fault aliases into a frequency that is not there; log only when a threshold trips and your history is biased toward trouble it never saw the start of; average away a transient and the spike that mattered disappears. Before you trust a number off an instrument, whether on a scope or on a live dashboard like [siliconwit.io's public devices](https://siliconwit.io/public-devices), ask how it was sampled, how it was aggregated, and what it left out. A measurement you cannot defend statistically is one you should not act on.
+:::
+
 ## Practical Checklist for Engineering Data
 
 <InArticleAd />

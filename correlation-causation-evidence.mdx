@@ -279,7 +279,7 @@ When you base a decision on N=1 evidence, acknowledge it. "This approach worked 
 A useful habit: after stating a claim, rate your confidence on a scale of 1 to 10. "I am about 3/10 confident this library handles edge cases correctly" forces you to be explicit about uncertainty. It also helps others understand how much weight to put on your recommendation.
 </Card>
 
-## "The Code Works When I Add a Delay"
+## ``The Code Works When I Add a Delay"
 
 <InArticleAd />
 
@@ -446,6 +446,10 @@ A test that gives the same result regardless of the true cause is useless, even 
 5. **Survivorship bias.** You read that successful startups in your industry rarely write detailed requirements documents. Should you skip requirements for your next project? What survivorship bias might be at play? What data would you need to make this decision properly?
 
 6. **Bayesian update.** Your embedded device fails intermittently. You believe there is a 70% chance it is a hardware issue and a 30% chance it is a firmware issue. You run the same firmware on a different board and the failure does not occur. How should this evidence update your beliefs? What if the second board is a different revision with a slightly different layout?
+
+:::tip[Instrument it]
+This is the trap that catches every monitoring system. Two sensors rise together and it is tempting to say one caused the other, or that the pattern means a fault, when both may be driven by a third thing: the morning warm-up, the shift change, the load going up. An anomaly detector flags correlation, not cause, so before you [act on an alert](https://siliconwit.io) ask what else changed at that moment. The discipline that separates a real fault from a coincidence is the same one that keeps a monitor trustworthy.
+:::
 
 ## Practical Takeaways
 

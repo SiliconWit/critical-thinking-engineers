@@ -25,44 +25,47 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 import CriticalThinkingEngineersComments from '../../../../components/critical-thinking-engineers/CriticalThinkingEngineersComments.astro';
 
-A well-crafted chart can make a 2% improvement look like a revolution, a flat trend look like exponential growth, and two unrelated variables look perfectly correlated. Darrell Huff's 1954 classic "How to Lie with Statistics" first catalogued these tricks, and they are more relevant today than ever. Engineers create and consume data visualizations constantly: performance dashboards, test reports, benchmark comparisons, project metrics. Understanding how charts deceive is both a defense skill (spotting misleading claims) and a professional skill (presenting your own data honestly). #DataVisualization #CriticalThinking #HonestData
+A supplier fits an energy saving device to your cold store and sends a chart one month later. The bar for "before" is tall. The bar for "after" is a thin strip at the bottom. The invoice is 4,000 USD. The numbers under the bars are 12,400 kWh and 12,030 kWh: a fall of 3%. Nothing on the chart is false, and it still misleads. Darrell Huff's 1954 book "How to Lie with Statistics" first collected these tricks. This lesson shows the seven you will meet most often, how to read past each one, and how to draw your own data so that the picture and the numbers say the same thing. #DataVisualization #CriticalThinking #HonestData
 
 ## Trick 1: The Truncated Y-Axis
 
-The most common and most effective chart deception. By starting the y-axis at a value other than zero, small differences appear enormous.
+The y-axis is the vertical scale of a chart. A truncated axis is one that does not start at zero. It is the most common trick, because it makes a small difference look very large.
 
 <Tabs>
   <TabItem label="The Deception">
-    Imagine a bar chart comparing two MCU power consumption measurements: Chip A draws 48 mA and Chip B draws 52 mA. If the y-axis starts at zero, the bars look nearly identical (they differ by about 8%). But if the y-axis starts at 45 mA, Chip B's bar appears roughly four times taller than Chip A's bar. The visual impression is a massive difference when the actual difference is modest.
+    Take the supplier's chart step by step.
+
+    1. The real change. Before: 12,400 kWh a month. After: 12,030 kWh. The fall is 370 kWh, and $370 / 12{,}400 = 3.0\%$.
+    2. The supplier's axis starts at 12,000 kWh. The chart shows only the part of each bar above 12,000: 400 kWh of the first bar and 30 kWh of the second.
+    3. What the eye compares. $400 / 30 \approx 13$. The first bar looks 13 times taller, so the chart looks like a fall of more than 90%.
 
     ```text
-    Misleading (y-axis starts at 45):     Honest (y-axis starts at 0):
+     Axis from 12,000 kWh       Axis from 0 kWh
 
-    52|          ████                     50|  ████    ████
-    50|          ████                     40|  ████    ████
-    48|  ████    ████                     30|  ████    ████
-    46|  ████    ████                     20|  ████    ████
-       ──────────────                     10|  ████    ████
-        Chip A  Chip B                     0|  ████    ████
-                                             ──────────────
-    "Chip B uses way more power!"             Chip A  Chip B
-                                          "About the same."
+     12,400 | ███               12,000 | ███   ███
+     12,300 | ███                9,000 | ███   ███
+     12,200 | ███                6,000 | ███   ███
+     12,100 | ███                3,000 | ███   ███
+     12,000 | ███   ▄▄▄              0 | ███   ███
+             before after              before after
+     "Use fell like a cliff."   "Almost the same."
     ```
+
+    The honest version starts at zero, and the two bars are almost equal. It states the change in words, "3% less, 370 kWh a month". It also shows several months before the device, because a month that is 3% lower than the month before may be only the weather.
   </TabItem>
   <TabItem label="When Truncation Is Legitimate">
-    Not all truncation is deceptive. If you are tracking a metric that varies in a narrow range (like CPU temperature between 60 and 80 degrees Celsius), starting at zero wastes most of the chart on empty space and makes real variation invisible. The key is transparency:
+    A cut axis is sometimes correct. A cold room that moves between 2 and 6 °C would be a flat line on an axis from 0 to 100 °C, and the variation that matters would be hidden. The rule is to be open about it:
 
-    - **Clearly label the axis** so readers can see it does not start at zero.
-    - **Add a break indicator** (a zigzag line) on the axis to signal truncation.
-    - **State the full range** in the caption or annotation.
-    - **Do not use bar charts** with truncated axes. Bars visually encode magnitude from zero; truncation breaks that encoding. Use line charts or dot plots instead.
+    - Mark the axis clearly, so that the reader sees it does not start at zero.
+    - Draw a break mark (a zigzag) on the axis.
+    - Use a line or points, not bars. The height of a bar is read as the whole amount, and a cut axis makes that reading false.
   </TabItem>
   <TabItem label="How to Spot It">
-    Always look at the y-axis before interpreting a chart. If it starts at a non-zero value, mentally re-scale the visual impression. Ask: "What would this chart look like if it started at zero?" If the dramatic visual difference shrinks to almost nothing, the chart is exaggerating.
+    Read the numbers on the y-axis before you look at the bars. If the axis does not start at zero, ask what the chart would look like if it did, and calculate the change in percent yourself.
   </TabItem>
 </Tabs>
 
-The following code plots the same sales data two ways. The first chart starts the y-axis at zero, giving an honest view of 6% total growth. The second chart starts at 990, making that same modest growth look dramatic.
+The following code plots the same sales data two ways. The first chart starts the y-axis at zero and shows growth of 6% over six months honestly. The second chart starts at 990, and the last bar is 7 times taller than the first.
 
 ```python title="honest_vs_misleading_chart.py"
 import numpy as np
@@ -103,21 +106,21 @@ print(f"The misleading chart makes a {actual_growth:.1f}% increase look like a {
 <InArticleAd />
 
 
-By carefully choosing the start and end dates of a time series, you can make any trend look like growth, decline, or stability.
+A time window is the period that a chart shows. By choosing where it starts and ends, the same data can be made to show growth, decline or no change.
 
 <Card title="The Peak-to-Trough Trick" icon="warning">
-Imagine monthly sales data that fluctuates around a flat average. If you start your chart at a low month and end at a high month, the trend looks like strong growth. Start at a high month and end at a low month, and the same data shows alarming decline. Start at a high month and end at another high month, and you see reassuring stability. Same data, three completely different stories, controlled entirely by the time window.
+Take monthly energy use that goes up and down around a level average. A chart from a low month to a high month shows strong growth. A chart from a high month to a low month shows a fall. The data are the same, and the window decides the story.
 
 ```text
-Full data (18 months, flat trend with noise):
+Full data (18 months, level with ups and downs):
     ╭─╮   ╭─╮   ╭─╮   ╭─╮   ╭─╮   ╭─╮
 ───╯   ╰─╯   ╰─╯   ╰─╯   ╰─╯   ╰─╯   ╰───
 
-Cherry-pick months 3-9 (trough to peak):
+Months 3 to 9 only (low to high):
         ╭─╮   ╭─╮
     ───╯   ╰─╯       "Growth!"
 
-Cherry-pick months 6-12 (peak to trough):
+Months 6 to 12 only (high to low):
     ╭─╮
         ╰─╯   ╰───   "Decline!"
 ```
@@ -125,11 +128,11 @@ Cherry-pick months 6-12 (peak to trough):
 
 ### Engineering Examples
 
-- **Performance improvements:** "Our response time improved 30% this quarter!" (But last quarter had an anomalous spike due to a misconfigured load balancer. Compared to two quarters ago, the "improvement" is 2%.)
-- **Bug counts:** "We closed more bugs than we opened this sprint!" (Starting the count after a week of triage that front-loaded bug closures.)
-- **Uptime metrics:** "99.99% uptime this month!" (The major outage was last month, which conveniently falls outside the window.)
+- **An energy saving.** "The cold store used 18% less after our service." The month before was the hottest of the year. Against the same month one year earlier, the saving is 2%.
+- **Uptime.** "The generator was available 99.9% of this month." The three day failure was last month, outside the window.
+- **Response time.** "Our service answered 30% faster this quarter." The quarter before had an unusual fault that made it slow.
 
-**Counter:** Always ask for the full history, not just the selected window. If someone shows you a time series, request a zoomed-out view that includes at least 2-3x the displayed time period.
+**Counter:** Ask for the full history. If a chart shows one month, ask for the year. A fair comparison for anything that follows the seasons is the same period one year earlier.
 
 ## Trick 3: Misleading Scales
 
@@ -138,31 +141,29 @@ Cherry-pick months 6-12 (peak to trough):
 
 ### Logarithmic vs. Linear
 
-A logarithmic y-axis compresses large values and expands small ones. This is useful for data spanning several orders of magnitude (like frequency response plots or population growth), but it can mislead when the audience expects a linear scale.
+On a linear axis, equal distances mean equal amounts: 0, 250, 500, 750. On a logarithmic (log) axis, equal distances mean equal factors: 1, 10, 100, 1,000. A log axis is useful when the data cover a very wide range. It misleads a reader who expects a linear axis.
 
 <Tabs>
   <TabItem label="The Deception">
-    On a log scale, the visual difference between 100 and 1,000 looks the same as the difference between 1,000 and 10,000. For an audience that does not notice the log scale, a 10x improvement and a 2x improvement can look identical. Conversely, a linear scale can make exponential growth look like a flat line for the early stages, hiding the coming explosion.
+    On a log axis, the step from 100 to 1,000 has the same height as the step from 1,000 to 10,000. A reader who does not see that the axis is logarithmic takes a gain of 900 and a gain of 9,000 for the same thing. In the other direction, a linear axis makes growth that doubles every year look flat in the early years.
   </TabItem>
   <TabItem label="When Each Scale Is Appropriate">
-    **Use log scale when:**
-    - Data spans multiple orders of magnitude
-    - You want to compare percentage changes rather than absolute changes
-    - The audience is technically sophisticated and accustomed to log scales (e.g., Bode plots)
+    **Use a log axis when:**
+    - The data cover a range of 100 times or more
+    - Changes in percent matter more than changes in amount
 
-    **Use linear scale when:**
-    - Data spans a narrow range
-    - Absolute differences matter more than ratios
-    - The audience may not be familiar with log scales
+    **Use a linear axis when:**
+    - The data cover a narrow range
+    - Your readers may not know log axes
   </TabItem>
   <TabItem label="How to Spot It">
-    Always check the axis labels. Are the gridlines evenly spaced in value (linear) or evenly spaced in powers of 10 (logarithmic)? If the y-axis reads 1, 10, 100, 1000, it is logarithmic. If it reads 0, 250, 500, 750, 1000, it is linear.
+    Read the numbers on the axis. If they are 1, 10, 100, 1000, the axis is logarithmic. If they are 0, 250, 500, 750, 1000, it is linear.
   </TabItem>
 </Tabs>
 
 ### Inconsistent Axis Intervals
 
-Another scale trick: unevenly spaced axis labels. The x-axis might read "Jan, Feb, Mar, Jun, Dec," omitting months where the data was unfavorable. The visual spacing suggests even intervals, but the actual time gaps are uneven, distorting the slope of any trend.
+The labels under a chart read "Jan, Feb, Mar, Jun, Dec", drawn at equal distances. The months with poor results are left out, and the unequal gaps change the slope of every trend. Check that equal distances along an axis are equal times.
 
 ## Trick 4: 3D Pie Charts (and Pie Charts in General)
 
@@ -170,9 +171,9 @@ Another scale trick: unevenly spaced axis labels. The x-axis might read "Jan, Fe
 
 
 <Card title="Why 3D Pie Charts Are Always Wrong" icon="warning">
-A 3D pie chart adds a perspective tilt that distorts slice sizes. Slices at the "front" of the chart (closer to the viewer) appear larger than slices at the "back," even when they represent the same value. This is not a matter of preference; it is a perceptual distortion that makes accurate comparison impossible.
+A 3D pie chart is drawn as a tilted disc. The slices at the front look larger than slices of the same value at the back, so a fair comparison is not possible.
 
-Even flat pie charts are poor for comparison because humans are bad at judging angles and areas. We perceive length (bar charts) and position (dot plots, scatter plots) much more accurately than area or angle.
+Flat pie charts are also weak for comparison. People judge length (bars) and position (points) much more accurately than angle or area.
 
 ```text
   What the data says:         What the 3D chart implies:
@@ -180,7 +181,7 @@ Even flat pie charts are poor for comparison because humans are bad at judging a
   C: 25%  D: 20%              D looks ~12% (back, compressed)
 ```
 
-**Rule:** Never use 3D pie charts. For part-to-whole comparisons, use a stacked bar chart, a waffle chart, or (if you must) a flat pie chart with labeled percentages.
+**Rule:** Never use a 3D pie chart. To show the parts of a whole, use a stacked bar, or a flat pie chart with the percentages written on it.
 </Card>
 
 ## Trick 5: Dual Y-Axes
@@ -188,19 +189,19 @@ Even flat pie charts are poor for comparison because humans are bad at judging a
 <InArticleAd />
 
 
-Plotting two different metrics on the same chart with independent y-axes can make unrelated trends look correlated.
+A chart with two y-axes draws two different quantities, one against the left scale and one against the right. Because the two scales are chosen separately, the person who draws the chart decides how closely the two lines appear to follow each other.
 
 <Tabs>
   <TabItem label="The Deception">
-    You plot "lines of code committed per week" on the left y-axis and "customer satisfaction score" on the right y-axis. By adjusting the scale of each axis independently, you can make the two lines track each other perfectly, suggesting that more code leads to happier customers. But the correlation is manufactured by the axis scaling, not by the data. You could make any two time series "correlate" by adjusting the scales.
+    A maintenance contractor draws "service visits each month" against the left axis and "plant output" against the right. The two lines rise together, and the chart suggests that more visits produce more output. But the range and the starting point of each axis were chosen to make the lines fit. Any two quantities that both rise over a year can be made to fit in this way.
   </TabItem>
   <TabItem label="The Deeper Problem">
-    Dual y-axes allow the chart creator to control the visual correlation by adjusting the range, offset, and direction of each axis. Two unrelated metrics can be made to look perfectly correlated, inversely correlated, or uncorrelated, depending on how the axes are scaled. The reader has no way to judge the real relationship without seeing each metric charted independently.
+    By changing the range or the direction of one axis, the same two quantities can be made to move together, to move in opposite directions, or to show no relation. The reader cannot judge the real relation from such a chart.
   </TabItem>
   <TabItem label="What to Do Instead">
-    - **Use two separate charts** stacked vertically with aligned x-axes. This preserves the time alignment without implying correlation.
-    - **Normalize both metrics** to the same scale (z-scores or percentage change from baseline) if you genuinely want to compare their trajectories.
-    - **Calculate the actual correlation** and report it as a number, not as a visual trick.
+    - Draw two charts, one above the other, with the same time axis.
+    - If you want to compare the two changes, draw both as percent change from the same starting month.
+    - Calculate the correlation and report the number.
   </TabItem>
 </Tabs>
 
@@ -209,10 +210,10 @@ Plotting two different metrics on the same chart with independent y-axes can mak
 <InArticleAd />
 
 
-Pictograms (using icons or images to represent quantities) introduce area distortion when scaled incorrectly.
+A pictogram shows an amount with a small picture, such as a barrel or a pump. It misleads when the picture is made larger to show a larger amount.
 
 <Card title="The Height vs. Area Problem" icon="setting">
-If Country A produces 100 units and Country B produces 200 units, a common mistake is to represent this with two icons where Icon B is twice as tall as Icon A. But since the icon is also twice as wide (maintaining proportions), its area is four times that of Icon A. The visual impression is a 4x difference, not a 2x difference.
+Site A produces 100 units and site B produces 200. The chart shows B with a picture twice as tall. To keep its shape the picture is also twice as wide, so its area is four times the area of A. The eye sees four times, and the data say two times.
 
 ```text
 Data: A = 100, B = 200 (2x ratio)
@@ -227,7 +228,7 @@ Right (use equal-sized icons, vary quantity):
   Visual ratio: 2x (accurate)
 ```
 
-**Rule:** When using pictograms, vary the count of identically-sized icons, not the size of a single icon. Or use bar charts.
+**Rule:** Show a larger amount with more pictures of the same size, not with a larger picture. Or use a bar chart.
 </Card>
 
 ## Trick 7: Simpson's Paradox
@@ -235,23 +236,23 @@ Right (use equal-sized icons, vary quantity):
 <InArticleAd />
 
 
-**What it is:** A trend that appears in several groups of data reverses when the groups are combined. This is not a chart trick per se, but a statistical phenomenon that chart presentation can exploit.
+Simpson's paradox is a result that holds inside every group and reverses when the groups are added together. It is a property of the numbers, not of the drawing, but a chart of totals alone can use it.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    Your company has two engineering teams. You measure code review turnaround time:
+    Two contractors repair pumps for you. You measure the average time of a repair:
 
-    | Team | Small PRs | Large PRs | Overall Average |
+    | Contractor | Small faults | Large faults | Average of all |
     |------|-----------|-----------|----------------|
-    | Team Alpha | 2 hours (80 PRs) | 8 hours (20 PRs) | 3.2 hours |
-    | Team Beta | 1 hour (10 PRs) | 6 hours (90 PRs) | 5.5 hours |
+    | Contractor A | 2 hours (80 jobs) | 8 hours (20 jobs) | 3.2 hours |
+    | Contractor B | 1 hour (10 jobs) | 6 hours (90 jobs) | 5.5 hours |
 
-    Team Alpha is faster overall (3.2 vs 5.5 hours). But Team Beta is faster in both categories: 1 hour vs 2 hours for small PRs, and 6 hours vs 8 hours for large PRs. The paradox arises because Team Beta handles a much higher proportion of large PRs, which drags up their overall average.
+    Contractor A has the lower average: 3.2 hours against 5.5. But contractor B is faster at both kinds of work: 1 hour against 2 for small faults, and 6 hours against 8 for large faults. B's average is higher only because 90 of B's 100 jobs were large faults: $(1 \times 10 + 6 \times 90) / 100 = 5.5$.
 
-    If you present only the overall averages, Team Alpha looks better. If you present the category breakdowns, Team Beta looks better in every category. Both presentations are factually correct, but they lead to opposite conclusions.
+    A bar chart of the two averages says "choose A". A chart with the two kinds of fault side by side says "choose B". Both are drawn from true numbers.
   </TabItem>
   <TabItem label="How to Handle It">
-    Whenever you see aggregated data, ask whether the subgroup compositions are similar. If they are not, the aggregate comparison may be misleading. Always check whether the conclusion holds within subgroups as well as across the aggregate. When presenting your own data, show both the aggregate and the subgroup breakdowns, and explain any discrepancies.
+    When you see one number for each of several groups, ask whether the groups did the same mix of work. If not, compare like with like: small with small, large with large. In your own reports, show the total and the parts, and explain any difference between them.
   </TabItem>
 </Tabs>
 
@@ -260,28 +261,26 @@ Right (use equal-sized icons, vary quantity):
 <InArticleAd />
 
 
-Now that you know how charts can mislead, here is how to make sure your own visualizations are clear and honest.
-
 <Steps>
-1. **Start bar chart y-axes at zero.** If you need to show detail in a narrow range, use a line chart or dot plot with a clearly marked axis break.
+1. **Start the y-axis of a bar chart at zero.** To show detail in a narrow range, use a line or points and mark the break in the axis.
 
-2. **Show the full time range.** If you are highlighting a specific period, include the broader context so the reader can judge whether the period is representative.
+2. **Show the full time range.** If you point to one period, show enough before and after it for the reader to judge whether it is typical.
 
-3. **Label everything.** Axis labels, units, sample sizes, and data sources should be visible on the chart, not buried in footnotes.
+3. **Label everything.** Names of the axes, units, the number of measurements and the source of the data belong on the chart.
 
-4. **Use appropriate chart types.** Bar charts for comparison, line charts for trends over time, scatter plots for relationships between two variables. Never use 3D effects.
+4. **Choose the chart for the question.** Bars to compare amounts, a line for change over time, points for the relation between two quantities. No 3D.
 
-5. **Report uncertainty.** Add error bars, confidence intervals, or at minimum the sample size. A mean without a measure of spread is incomplete.
+5. **Show the uncertainty.** Add error bars, or at least the number of measurements. A mean with no measure of scatter is incomplete.
 
-6. **Avoid dual y-axes.** If you must compare two metrics, use separate vertically-stacked panels with aligned x-axes.
+6. **Do not use two y-axes.** Draw two charts, one above the other, with the same time axis.
 
-7. **Show all the data when feasible.** Dot plots and strip plots that show individual data points are more informative than bar charts showing only means.
+7. **Show the single measurements when you can.** Points for every reading tell more than one bar for their mean.
 
-8. **Use color and size carefully.** Color should encode meaningful categories, not just decoration. Size should scale linearly with the data value.
+8. **Use colour and size with care.** Colour separates groups that mean something. Size grows in the same proportion as the value.
 </Steps>
 
 :::tip[Instrument it]
-A monitoring dashboard, like the live ones at [siliconwit.io/public-devices](https://siliconwit.io/public-devices), is just charts of sensor data, so every trick in this lesson can mislead the operator who trusts it. A truncated y-axis turns normal drift into a crisis, a smoothed line hides the spike that was the real fault, and a dual axis invents a correlation two sensors do not share. When you present live data to someone who will act on it, show the zero, keep the raw trace next to the smoothed one, and show the uncertainty. An honest instrument is one whose readings you can act on without second-guessing.
+A monitoring screen, like the live ones at [siliconwit.io/public-devices](https://siliconwit.io/public-devices), is charts of sensor data, so every trick in this lesson can mislead the operator who trusts it. A cut y-axis turns normal drift into a crisis, a smoothed line hides the spike that was the real fault, and two axes invent a relation that two sensors do not have. When you show live data to someone who will act on it, show the zero, keep the raw line next to the smoothed one, and show the uncertainty.
 :::
 
 ## A Checklist for Reading Charts
@@ -289,23 +288,21 @@ A monitoring dashboard, like the live ones at [siliconwit.io/public-devices](htt
 <InArticleAd />
 
 
-Use this whenever you encounter a data visualization in a report, presentation, or article:
-
 <CardGrid>
-  <Card title="Check the Axes" icon="star">
-    Does the y-axis start at zero? If not, is the truncation justified and clearly marked? Are the axis intervals evenly spaced? Is the scale linear or logarithmic, and is it appropriate for the data?
+  <Card title="Check the axes" icon="star">
+    Does the y-axis start at zero? If not, is the cut marked? Are equal distances equal amounts, or is the axis logarithmic?
   </Card>
 
-  <Card title="Check the Time Window" icon="setting">
-    Does the selected time period tell the full story? What happened before and after the displayed window? Could a different start or end date change the apparent trend?
+  <Card title="Check the time window" icon="setting">
+    What happened before and after the period shown? Would a different start or end change the trend?
   </Card>
 
-  <Card title="Check the Comparison" icon="approve-check">
-    Are the groups being compared actually comparable? Are sample sizes similar? Could confounding variables (Simpson's paradox) reverse the conclusion within subgroups?
+  <Card title="Check the comparison" icon="approve-check">
+    Did the groups do the same mix of work? Are the numbers of measurements similar? Could the result reverse inside the groups (Simpson's paradox)?
   </Card>
 
-  <Card title="Check the Visual Encoding" icon="warning">
-    Are areas, heights, and colors used accurately? Do 3D effects or perspective distort the visual impression? Could a simpler chart type communicate the same information more honestly?
+  <Card title="Check the drawing" icon="warning">
+    Do heights and areas grow in proportion to the values? Is there a 3D effect? Would a plain bar or line show the same data more truthfully?
   </Card>
 </CardGrid>
 
@@ -316,51 +313,47 @@ Use this whenever you encounter a data visualization in a report, presentation, 
 
 ### Exercise 1: Before and After
 
-Take a dataset from your work (benchmark results, test pass rates, or performance metrics). Create two charts from the same data: one that honestly represents the findings and one that exaggerates or misleads (using any of the tricks from this lesson). Share both versions with a colleague and see if they can identify which is misleading and why.
+Take data from your own work: monthly energy use, pump running hours or test results. Draw two charts from the same data, one honest and one that uses a trick from this lesson. Show both to a colleague. Can they say which one misleads, and why?
 
 ### Exercise 2: Chart Autopsy
 
-Find three charts in recent technical articles, blog posts, or presentations. For each chart, identify:
-- What story does the chart tell?
-- Are the axes honest (starting at zero, evenly spaced, appropriate scale)?
-- Is the time window representative?
-- Could a different chart type communicate the information more clearly?
+Find three charts in suppliers' brochures, reports or articles. For each chart, answer:
+- What does the chart want you to believe?
+- Does the axis start at zero, and are its steps equal?
+- Is the time window typical?
+- What is the change in percent when you calculate it yourself?
 
 ### Exercise 3: Simpson's Paradox Hunt
 
-Take a dataset with at least two subgroups and compute both the aggregate and subgroup statistics. Does the aggregate trend hold within each subgroup? If not, you have found a Simpson's paradox. Write up what the data actually shows and how different presentations could lead to opposite conclusions.
+Take data with at least two groups, such as two shifts or two sites, and two kinds of work. Calculate the totals and the values inside each kind of work. Does the comparison of totals hold inside each kind?
 
 ### Exercise 4: Dashboard Audit
 
-Look at a dashboard your team uses regularly (CI metrics, performance monitoring, project tracking). Identify at least two ways the visualizations could be misinterpreted. Suggest specific improvements to make the dashboard more honest and harder to misread.
-
-### Exercise 5: Honest Chart Redesign
-
-Find a chart online that uses at least one of the misleading techniques covered in this lesson (social media, news articles, and marketing materials are good hunting grounds). Redesign it to present the same data honestly. Document what changed and why the original was misleading.
+Look at a monitoring screen or a regular report that your team uses. Find at least two ways in which a reader could misread its charts. Propose a change for each.
 
 ## Putting It All Together
 
 <InArticleAd />
 
 
-This lesson completes the first five lessons of the Critical Thinking for Engineers course. You now have a toolkit for recognizing:
+Charts are the last of five ways in which you can be misled, each with its own defence:
 
-| Lesson | Thinking Error | Your Defense |
+| Lesson | The error | Your defence |
 |--------|---------------|-------------|
-| 1. How Your Brain Tricks You | System 1 heuristics (anchoring, availability, substitution) | Recognize when to override intuition with deliberate analysis |
-| 2. Logical Fallacies | Flawed argument structures | Identify the specific fallacy and redirect to evidence |
-| 3. Cognitive Biases | Systematic judgment errors | Organizational debiasing (pre-mortems, red teams, checklists) |
-| 4. Statistics Done Wrong | Numerical misinterpretation | Statistical literacy (effect sizes, sample sizes, confounds) |
-| 5. Charts and Data | Visual deception | Chart reading checklist (axes, windows, scales, comparisons) |
+| [How Your Brain Tricks You](/education/critical-thinking-engineers/thinking-fast-and-slow/) | Fast judgments that feel certain | Know when to slow down and calculate |
+| [Logical Fallacies](/education/critical-thinking-engineers/logical-fallacies-arguments/) | Arguments with a broken structure | Name the fallacy and return to the evidence |
+| [Cognitive Biases](/education/critical-thinking-engineers/cognitive-biases-engineering/) | Judgment errors that repeat | Team methods that expose them |
+| [Statistics Done Wrong](/education/critical-thinking-engineers/statistics-done-wrong/) | Numbers that are misread | Effect size, sample size, hidden causes |
+| Charts and data | Pictures that exaggerate | The checklist above |
 
-The common thread: your brain, your colleagues, and your data can all mislead you. The defense is not cynicism, but calibrated skepticism backed by specific knowledge of how each type of error works. Look at the evidence. Check the reasoning. Verify the visualization. And when you present your own work, hold yourself to the same standard you demand of others.
+Your own mind, your colleagues and your data can all mislead you. The answer is not to distrust everything. It is to know how each error works, to check the axis and the numbers, and to hold your own charts to the standard you ask of others.
 
 ## Seen in the field
 
 <InArticleAd />
 
 
-A window shorter than the trend is not a lie anybody tells deliberately, and it is still the most common way a chart misleads. A district meter looked entirely healthy on any three day view for nine consecutive weeks, because a fault arriving at 0.3% a day cannot appear in three days of data. Ten weeks of the same readings show it immediately, in [nine weeks of a leak growing](/blog/remote-monitoring/minimum-night-flow-leak-detection/). For the opposite failure, a chart that is honest and still hides the fault because the wrong quantity is plotted, see [the pump that ran dry](/blog/remote-monitoring/borehole-and-storage-tank/).
+A window that is shorter than the trend is the most common way a chart misleads, and nobody intends it. A district meter looked healthy on any three day view for nine weeks, because a fault that grows by 0.3% a day cannot appear in three days of data. Ten weeks of the same readings show it at once, in [nine weeks of a leak growing](/blog/remote-monitoring/minimum-night-flow-leak-detection/). For the opposite failure, a chart that is honest and still hides the fault because the wrong quantity is drawn, see [the pump that ran dry](/blog/remote-monitoring/borehole-and-storage-tank/).
 
 <CriticalThinkingEngineersComments />
 

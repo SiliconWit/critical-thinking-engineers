@@ -27,42 +27,23 @@ import PodcastEmbed from '../../../../components/PodcastEmbed.astro';
 
 import CriticalThinkingEngineersComments from '../../../../components/critical-thinking-engineers/CriticalThinkingEngineersComments.astro';
 
-Your brain is not a single processor. It runs two fundamentally different modes of operation, and the interplay between them shapes every technical decision you make. Daniel Kahneman's Nobel Prize-winning research revealed that most of what we think of as "reasoning" is actually rapid pattern matching that happens before conscious thought even begins. For engineers, understanding this dual-process architecture is the first step toward catching your own thinking errors before they become design errors. #CriticalThinking #SystemThinking #EngineeringMindset
+The cold room alarm sounds at two in the morning. The last three times it was the door switch, so the technician silences it and goes back to sleep. This time the compressor has stopped, and by morning the stock is lost. Nobody was careless. A fast, automatic part of the mind answered before the careful part was asked. This lesson describes the two ways of thinking that the psychologist Daniel Kahneman set out in his book "Thinking, Fast and Slow", shows where the fast one can be trusted, and gives you ways to call on the slow one before a quick judgment becomes an expensive one. #CriticalThinking #SystemThinking #EngineeringMindset
 
 <PodcastEmbed src="https://open.spotify.com/episode/5zYy6KKWhaKklopfVrniVG?si=CbNSLRzvRvqGZ_NMmd3Etg" />
 
 ## Two Systems, One Brain
 
-Kahneman describes two modes of thinking that operate in every human mind. He called them System 1 and System 2, not because they are separate brain regions, but because they represent two fundamentally different styles of processing information.
+Kahneman describes two ways of thinking that work in every human mind. He named them System 1 and System 2. They are not two places in the brain. They are two styles of work.
 
 <CardGrid>
   <Card title="System 1: Fast Thinking" icon="star">
-    Automatic, effortless, and always running. System 1 recognizes patterns, generates intuitions, makes snap judgments, and produces emotional reactions. It is the system that lets an experienced engineer glance at a schematic and say "that pull-up resistor value is wrong" without consciously calculating anything. It operates on heuristics, mental shortcuts built from experience.
+    Automatic, without effort, and always running. System 1 recognizes patterns and gives you an answer or a feeling at once. It lets an experienced technician hear a pump for two seconds and say "that bearing is failing" without any calculation. It works with heuristics: mental shortcuts built from experience.
   </Card>
 
   <Card title="System 2: Slow Thinking" icon="setting">
-    Deliberate, effortful, and easily exhausted. System 2 handles logical reasoning, complex calculations, careful comparison of alternatives, and anything that requires focused attention. It is the system you engage when you sit down with a datasheet and methodically verify timing constraints. It requires concentration and drains mental energy.
+    Deliberate, effortful, and quickly tired. System 2 does step by step reasoning, calculation, and careful comparison of options. You use it when you sit with a pump curve and a pipe drawing and work out whether the pump can deliver the flow. It needs your full attention.
   </Card>
 </CardGrid>
-
-```text
-  Two Modes of Thinking
-  ──────────────────────────────────────────────────────────
-  SYSTEM 1 (Fast)                SYSTEM 2 (Slow)
-  ──────────────────────────     ──────────────────────────
-  Automatic, always running      Deliberate, needs focus
-  Recognizes patterns instantly  Analyzes step by step
-  Emotional, intuitive           Logical, careful reasoning
-  Low effort, low energy cost    High effort, drains energy
-
-  TRUST IT WHEN:                 USE IT WHEN:
-  Familiar domain, deep          Unfamiliar problem,
-  expertise, quick call needed   high stakes, complex tradeoffs
-
-  IT FAILS WHEN:                 IT'S HARD BECAUSE:
-  Unfamiliar domains,            Requires concentration,
-  anchoring, availability bias   we default to System 1
-```
 
 ```mermaid
 flowchart TD
@@ -73,183 +54,198 @@ flowchart TD
     E --> F[Revised answer]
 ```
 
-The crucial insight is this: System 1 runs first, always. It generates an answer, a feeling, an intuition, and then System 2 either endorses it (which takes no effort) or overrides it (which takes significant effort). Most of the time, System 2 is lazy. It accepts what System 1 offers without checking.
+System 1 always runs first. It produces an answer, and then System 2 either accepts it, which costs no effort, or checks and replaces it, which costs a lot. Most of the time System 2 accepts what it is given without checking.
 
 ### A Quick Self-Test
 
-Consider this problem before reading further:
+Answer this before you read further:
 
-> A microcontroller board and a sensor module together cost 11 USD. The board costs 10 USD more than the sensor. How much does the sensor cost?
+> A pressure gauge and its fitting together cost 11 USD. The gauge costs 10 USD more than the fitting. How much does the fitting cost?
 
-If your immediate answer was 1 USD, that was System 1 talking. Check: if the sensor costs 1 USD, the board costs "10 more" = 11 USD, and the total would be 12 USD, not 11. That breaks the first constraint. The correct answer: let S = sensor price, then S + (S + 10) = 11, so 2S = 1, meaning S = 0.50 USD. The board costs 10.50 USD. Total: 10.50 + 0.50 = 11 USD, and the difference is exactly 10 USD. Most people, including engineers, get this wrong on first instinct because System 1 substitutes the easier problem ("11 minus 10 equals 1") for the actual algebraic constraint ("costs 10 more than" is not the same as "costs 10").
+If your first answer was 1 USD, that was System 1. Check it: a fitting at 1 USD makes the gauge 11 USD, and the total 12 USD, not 11.
+
+Now the slow way. Let $S$ be the price of the fitting in USD. The gauge costs $S + 10$, so $S + (S + 10) = 11$, which gives $2S = 1$ and $S = 0.50$ USD. The gauge costs 10.50 USD, the total is 11 USD, and the difference is exactly 10 USD.
+
+Most people get this wrong at first. System 1 answered an easier question ("11 minus 10") in place of the real one ("costs 10 more than" is not the same as "costs 10").
 
 ## When System 1 Helps Engineers
 
 <InArticleAd />
 
 
-System 1 is not the enemy. For experienced engineers, it is often the most valuable tool in the toolbox. Years of practice build pattern libraries that System 1 can access instantly.
+System 1 is not the enemy. Years of practice build a store of patterns that it can reach at once, and for an experienced person that store is very valuable.
 
 <Card title="Expert Intuition Is Real" icon="approve-check">
-When a senior embedded developer says "that looks like a stack overflow" after glancing at crash symptoms for two seconds, that is System 1 pattern matching against hundreds of previous debugging sessions. This intuition is genuine expertise, not a guess. Kahneman himself acknowledges that expert intuition, built through prolonged practice in a regular environment with rapid feedback, can be remarkably accurate.
+When a refrigeration technician looks at frost on a suction line and says "low on charge", System 1 is matching what it sees against hundreds of earlier service visits. That is real expertise, not a guess. Kahneman agrees that expert intuition can be very accurate when it was built by long practice in a regular environment that gives fast feedback.
 </Card>
 
 ### Where System 1 Shines
 
 | Situation | How System 1 Helps |
 |-----------|-------------------|
-| **Debugging familiar systems** | Pattern matching against past bugs gets you to the root cause faster than systematic analysis |
-| **Code review** | Experienced reviewers "feel" when something is wrong before they can articulate why |
-| **Schematic review** | Missing decoupling caps, wrong pull-up values, and incorrect pinouts jump out at experienced designers |
-| **Safety checks** | "Something feels off about this test setup" is often System 1 detecting a hazard pattern |
-| **Time-critical decisions** | When a production line is down, fast pattern matching beats slow analysis |
+| Fault finding on familiar equipment | The pattern of earlier faults leads you to the cause faster than a full procedure |
+| Walking the plant | An operator notices a new sound, smell or vibration before any instrument shows it |
+| Safety checks | "Something is wrong with this setup" is often a hazard pattern that System 1 has recognized |
+| Urgent decisions | When a production line is stopped, a fast match to a known pattern is better than a slow analysis |
 
-The key condition is that System 1 intuition is reliable only when you have extensive experience in a domain with clear, rapid feedback. A developer who has debugged hundreds of memory corruption issues has reliable intuition about memory corruption. That same developer's intuition about, say, antenna design (a domain where they have no experience) is worthless.
+The condition is that you have long experience in that exact field, and that the field tells you quickly and clearly when you are wrong. A technician who has repaired hundreds of pumps has reliable intuition about pumps. The same technician's intuition about a solar inverter they have never opened is only a guess.
 
 ## When System 1 Fails: The Dangerous Heuristics
 
 <InArticleAd />
 
 
-System 1 uses shortcuts called heuristics. They work well in many situations but produce systematic errors in others. Here are the ones that most commonly trip up engineers.
+Heuristics work well in many situations. In others they produce the same error again and again. Three of them cause most of the trouble in technical work.
 
 ### Anchoring
 
-The first number you encounter disproportionately influences your subsequent estimates, even when that number is irrelevant.
+The first number you hear pulls your later estimates toward it, even when that number has no basis.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    Your team lead says: "I think this firmware rewrite will take about 2 weeks." Now everyone on the team anchors to that estimate. Even if your independent analysis suggests 6 weeks, you will feel pressure to adjust downward toward the anchor. Studies show that arbitrary anchors (even random numbers) shift estimates by 20-40%.
-
-    This is why estimation poker works: everyone reveals their estimate simultaneously, preventing the most senior person from anchoring the group.
-  </TabItem>
-  <TabItem label="Everyday Example">
-    A car dealership shows you the "original price" of 35,000 USD before offering a "discount" to 28,000 USD. The 35,000 anchor makes 28,000 feel like a bargain, even if the car's market value is 25,000 USD.
+    A supplier says: "Customers usually save about 30% on energy with this drive." You have no measurements yet, but 30% is now in your head. When your own calculation gives 8%, it feels too low, and you are tempted to "meet in the middle" at 15% or 20%. The supplier's number had no evidence behind it, and it still moved your estimate.
   </TabItem>
   <TabItem label="How to Counter It">
-    Generate your own estimate before hearing anyone else's. In team settings, use simultaneous reveal techniques (planning poker, anonymous polling). When you notice an anchor, explicitly ask yourself: "If I had not heard that number, what would I estimate from scratch?"
+    Make your own estimate before you hear another person's. In a team, let everyone write their estimate down and show them together, so the most senior person does not set the number for all. When you notice an anchor, ask: "If I had never heard that number, what would I estimate?"
   </TabItem>
 </Tabs>
 
 ### Availability Heuristic
 
-You judge the probability of an event by how easily examples come to mind, not by actual frequency.
+You judge how likely an event is by how easily an example comes to mind, not by how often it happens.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    Last month, your team spent three days tracking down a race condition in an RTOS task. Now, every time something behaves intermittently, your first hypothesis is "race condition." System 1 is serving up the most recent, most vivid debugging memory. But the actual cause might be a loose connector, a marginal power supply, or an interrupt priority issue. You are overweighting one failure mode because it is fresh in your memory.
+    Last month a borehole pump stopped because a rat had chewed the float switch cable, and it took three days to find. Now, each time a pump stops, your first thought is "cable damage". System 1 offers the newest and most vivid memory. The cause this time may be a tripped overload, a low water level or a blocked strainer, all of which happen more often.
   </TabItem>
   <TabItem label="Everyday Example">
-    After seeing news coverage of a plane crash, people overestimate the danger of flying relative to driving, even though driving is statistically far more dangerous per mile traveled. Dramatic, memorable events feel more likely than they are.
+    After news of a plane crash, people judge flying to be more dangerous than driving, although driving is far more dangerous for each kilometre travelled. Dramatic events feel more likely than they are.
   </TabItem>
   <TabItem label="How to Counter It">
-    When you catch yourself jumping to a hypothesis, ask: "Am I choosing this because it is the most likely cause, or because it is the most memorable one?" Keep a log of root causes in your projects. Over time, the data will correct your availability bias.
+    Ask: "Am I choosing this cause because it is the most likely, or because it is the one I remember best?" Then count. Keep a log of the cause of every fault. The worked case below shows what such a log can tell you.
   </TabItem>
 </Tabs>
 
 ### Substitution
 
-When faced with a hard question, System 1 silently replaces it with an easier question and answers that instead.
+When a question is hard, System 1 quietly answers an easier question in its place.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    **Hard question:** "Is this software architecture maintainable over the next five years?"
+    **Hard question:** "Will this generator still be reliable after ten years in our dust and heat?"
 
-    **Substituted question:** "Does this architecture feel clean and elegant right now?"
+    **Substituted question:** "Does this generator look well made, and did the salesperson seem honest?"
 
-    System 1 swaps a difficult prediction (long-term maintainability under changing requirements) for an easy judgment (current aesthetic impression). An architecture can look clean today and become a nightmare when requirements change, or look messy today but prove remarkably adaptable.
+    A prediction about ten years of service has been replaced by a first impression. The two can differ in either direction: a machine that looks rough may run for decades, and a handsome one may fail early.
   </TabItem>
   <TabItem label="Everyday Example">
     **Hard question:** "How happy are you with your life overall?"
 
     **Substituted question:** "What is my mood right now?"
 
-    Kahneman found that people's answers to life satisfaction questions are heavily influenced by trivially manipulable factors like the weather or finding a coin on the ground moments before being asked.
+    Kahneman describes studies by Norbert Schwarz and colleagues in which answers about satisfaction with life were moved by small things, such as the weather or finding a coin a moment before the question.
   </TabItem>
   <TabItem label="How to Counter It">
-    When making important decisions, write down the actual question you are trying to answer. Then check whether the evidence you are considering actually addresses that question or a simpler substitute. If you notice you are answering "do I like this?" instead of "will this work?", slow down and engage System 2.
+    For an important decision, write down the real question. Then check that your evidence answers that question and not a simpler one. If you find you are answering "do I like this?" in place of "will this work?", slow down and use System 2.
   </TabItem>
 </Tabs>
+
+### A worked case: the alarm that is "always the door"
+
+A cold room holds stock worth 4,000 USD. Its high temperature alarm sounds several times a month, and the night technician has learned to ignore it: "it is always the door". A walk to the room takes ten minutes.
+
+That belief comes from memory, so count instead. The alarm log for the last year has 40 alarms:
+
+| Cause found | Alarms |
+|-------------|--------|
+| Door left open | 26 |
+| Defrost cycle running | 9 |
+| Refrigeration fault | 5 |
+
+So the door caused 26 of 40 alarms, which is 65%, not "always". A real fault caused $5 / 40 = 12.5\%$, one alarm in eight.
+
+Now the cost. If an ignored fault loses the stock, each ignored alarm carries an average loss of
+
+$$
+0.125 \times 4{,}000 \text{ USD} = 500 \text{ USD}
+$$
+
+System 1 compared a ten minute walk with "nothing, it is the door". System 2 compares the same walk with 500 USD. The fast answer was right about the most common cause and still wrong about what to do.
 
 ## The WYSIATI Problem
 
 <InArticleAd />
 
 
-Kahneman coined the phrase "What You See Is All There Is" (WYSIATI) to describe System 1's most dangerous tendency: it builds the best story it can from whatever information is available and never considers what information might be missing.
+Kahneman uses the phrase "What You See Is All There Is" (WYSIATI) for a dangerous habit of System 1: it builds the best story it can from the information in front of it, and it never asks what information is missing.
 
 <Card title="WYSIATI in Engineering" icon="warning">
-A hardware engineer reviews a sensor datasheet that shows excellent accuracy specs at 25 degrees Celsius. System 1 builds a confident story: "This sensor is accurate." But the datasheet did not show performance at -20 or +85 degrees, which are the actual operating conditions. System 1 never noticed the missing data because it never asks "what am I not seeing?"
+An engineer reads a sensor datasheet that shows excellent accuracy at 25 °C. System 1 builds a confident story: "This sensor is accurate." The datasheet says nothing about -20 °C or +85 °C, which are the conditions on site. System 1 did not notice the gap, because it never asks "what am I not seeing?"
 </Card>
 
 ### WYSIATI Shows Up Everywhere
 
-- **Bug reports:** You read a user's description of the problem and immediately form a hypothesis. But the user only described what they noticed, not what actually happened. Missing context (what OS version, what sequence of actions, what other software was running) gets ignored by System 1.
+- **Fault reports:** An operator writes "pump tripped again". You form a cause at once. The report holds only what the operator noticed. What the tank level was, what else was running and what the weather was doing are missing, and System 1 does not ask for them.
 
-- **Project planning:** You estimate based on the requirements you know about. System 1 does not add time for requirements that have not been discovered yet, even though unknown requirements always emerge.
-
-- **Hiring decisions:** You interview a candidate for 45 minutes and feel confident you know whether they will perform well. But you are building a story from a tiny sample of their behavior in an artificial setting.
+- **Project planning:** You estimate from the tasks you know about. System 1 adds no time for the tasks nobody has discovered yet, although some always appear.
 
 ### The Counter: A Pre-mortem
 
-Before committing to a decision, run a pre-mortem. Imagine it is six months from now and the decision turned out badly. Ask: "What went wrong?" This forces System 2 to generate the missing information that System 1 ignored.
+Before you commit to a decision, imagine that six months have passed and it has gone badly. Ask: "What went wrong?" This makes System 2 produce the missing information that System 1 ignored.
 
 ## Cognitive Ease and Engineering Decisions
 
 <InArticleAd />
 
 
-System 1 is influenced by cognitive ease: how fluently information is processed. Ideas that are presented clearly, repeated often, or primed by recent experience feel more true, regardless of their actual validity.
+Cognitive ease is how smoothly the mind takes in a piece of information. An idea that is clearly presented, often repeated or close to something you met recently feels more true, whether it is true or not.
 
 ### How Cognitive Ease Affects Engineers
 
 | Factor | Effect on Judgment |
 |--------|-------------------|
-| **Familiarity** | Frameworks and tools you have used before feel like better choices, even when unfamiliar alternatives are objectively superior for the task |
-| **Presentation quality** | A beautifully formatted proposal feels more credible than a messy one with the same content |
-| **Repetition** | "Everyone knows you should use RTOS for real-time systems" repeated enough times feels true, even for applications where a bare-metal approach is simpler and more appropriate |
-| **Priming** | If you just read an article about security vulnerabilities, you will overweight security concerns in your next design review |
+| Familiarity | The brand or tool you have used before feels like the better choice, even when another fits the job better |
+| Quality of presentation | A well printed proposal feels more believable than an untidy one with the same content |
+| Repetition | "Everyone knows a bigger pump is the safe choice", heard often enough, feels true, even where an oversized pump wastes energy and wears faster |
 
-This does not mean well-presented ideas are wrong. It means that presentation quality is not evidence of technical merit, and your brain conflates the two.
+Well presented ideas are not wrong for that reason. Presentation is simply not evidence, and the mind treats it as if it were.
 
 ## Practical Framework: When to Trust Your Gut
 
 <InArticleAd />
 
 
-Not all intuition is created equal. Use this checklist to decide whether to trust System 1 or override it with System 2.
+Use these two lists to decide between the fast answer and the slow one.
 
 <Card title="Trust System 1 When..." icon="approve-check">
-- You have deep experience in this specific domain (not a related one)
-- The environment provides clear, rapid feedback (you find out quickly if you are wrong)
-- The situation matches patterns you have seen many times before
-- The stakes are low enough to recover from a wrong call
-- Time pressure makes deliberate analysis impractical
+- You have long experience in this exact field, not a neighbouring one
+- The field gives clear and fast feedback, so you soon learn when you are wrong
+- The situation matches patterns you have seen many times
+- A wrong call is cheap to correct
 </Card>
 
 <Card title="Override with System 2 When..." icon="warning">
-- You are in an unfamiliar domain or facing a novel problem
-- The decision has long-term consequences that are hard to reverse
-- You notice strong emotional reactions driving the decision
-- Multiple people on the team have different intuitions
-- The problem involves probabilities, statistics, or large numbers
-- You catch yourself saying "obviously" or "clearly" about something complex
+- The field or the problem is new to you
+- The decision is hard to reverse
+- People on the team have different intuitions
+- The problem involves probabilities, statistics or large numbers
+- You hear yourself say "obviously" or "clearly" about something complicated
 </Card>
 
 ### A Decision Journal
 
-One of the most effective debiasing tools is a decision journal. When you make a significant technical decision, write down:
+A decision journal is one of the most useful tools against these errors. When you make an important technical decision, write down:
 
 <Steps>
-1. **The decision and the alternatives you considered.** This forces System 2 to engage.
+1. **The decision and the alternatives you considered.** Writing them makes System 2 work.
 
-2. **Your confidence level.** "I am 80% sure this is the right architecture" gives you something to calibrate against later.
+2. **Your confidence level.** "I am 80% sure this is the right pump" gives you something to check later.
 
-3. **The key assumptions.** What must be true for this decision to work out?
+3. **The key assumptions.** What must be true for this decision to succeed?
 
-4. **What would change your mind.** Pre-committing to disconfirming evidence prevents post-hoc rationalization.
+4. **What would change your mind.** If you name the evidence now, you cannot explain it away later.
 
-5. **Review quarterly.** Compare your predictions to outcomes. Over time, you will learn where your intuition is calibrated and where it is systematically off.
+5. **Review every three months.** Compare what you predicted with what happened. In time you learn where your intuition is reliable and where it is not.
 </Steps>
 
 ## Exercises
@@ -257,33 +253,24 @@ One of the most effective debiasing tools is a decision journal. When you make a
 <InArticleAd />
 
 
-These exercises help you recognize System 1 and System 2 in your daily work.
-
 ### Exercise 1: Decision Audit
 
-Think about the last three significant technical decisions you made (choosing a library, picking a design approach, estimating a timeline). For each one:
-- Did you use System 1 (gut feeling, quick judgment) or System 2 (deliberate analysis)?
-- If System 1, was it based on genuine domain experience with feedback, or was it a heuristic shortcut?
-- Would the outcome have been different if you had used the other system?
+Think about the last three important technical decisions you made (a repair or replace choice, a supplier, a time estimate). For each one:
+- Did you use System 1 (a quick judgment) or System 2 (a deliberate analysis)?
+- If System 1, did it rest on real experience with feedback, or on a shortcut?
+- Would the result have been different with the other system?
 
-### Exercise 2: Anchoring Awareness
+### Exercise 2: Availability Check
 
-For one week, notice every time you hear a number before forming your own estimate. In meetings, ask yourself: "Would I estimate the same thing if I had not heard that number first?" Try generating your own estimates before looking at existing ones.
+The next time you jump to a cause for a fault, stop and write down three other possible causes before you test the first. If your site keeps a fault log, count the causes of the last 20 faults and compare the count with what you would have guessed.
 
-### Exercise 3: Availability Check
+### Exercise 3: WYSIATI Drill
 
-The next time you jump to a debugging hypothesis, pause and ask: "Am I choosing this because it is statistically the most likely cause, or because it is the most memorable one?" Write down three alternative hypotheses before investigating your first instinct.
+Take a decision you are working on and write down everything you know about it. Then write a second list: "What information am I missing that could change my conclusion?" Find at least five items.
 
-### Exercise 4: WYSIATI Drill
+### Exercise 4: Substitution Spotter
 
-Pick a current project decision and write down everything you know about the problem. Then write a second list: "What information am I missing that could change my conclusion?" Challenge yourself to list at least five unknowns.
-
-### Exercise 5: Substitution Spotter
-
-In your next design review or architecture discussion, listen for moments where the team answers an easy question instead of the hard one. Common substitutions:
-- "Do we like this approach?" instead of "Will this approach scale under realistic load?"
-- "Has this technology worked before?" instead of "Does this technology fit our specific constraints?"
-- "Is this developer confident?" instead of "Is this estimate based on evidence?"
+In your next review meeting, listen for an easy question answered in place of the hard one, such as "Is this person confident?" in place of "Is this estimate based on evidence?"
 
 ## Key Takeaways
 
@@ -292,19 +279,19 @@ In your next design review or architecture discussion, listen for moments where 
 
 <CardGrid>
   <Card title="Two Systems" icon="star">
-    Your brain runs System 1 (fast, automatic, pattern-based) and System 2 (slow, deliberate, logical). System 1 always fires first, and System 2 is lazy about checking its work.
+    System 1 is fast, automatic and based on patterns. System 2 is slow, deliberate and logical. System 1 always answers first, and System 2 seldom checks.
   </Card>
 
   <Card title="Expert Intuition Is Earned" icon="approve-check">
-    System 1 intuition is trustworthy only when built from extensive experience in a domain with clear, rapid feedback. Outside that domain, it is just a guess wearing a costume.
+    Trust System 1 only where it was built by long experience in a field with clear and fast feedback. Outside that field it is a guess.
   </Card>
 
   <Card title="Heuristics Have Costs" icon="warning">
-    Anchoring, availability, and substitution are not occasional glitches. They are default operating modes that affect every estimate, every diagnosis, and every decision you make.
+    Anchoring, availability and substitution are the normal way System 1 works, not rare accidents. They touch estimates, fault finding and buying decisions.
   </Card>
 
-  <Card title="Awareness Is the First Defense" icon="setting">
-    You cannot eliminate System 1 biases, but you can learn to recognize the situations where they are most likely to mislead you and deliberately engage System 2 in those moments.
+  <Card title="Count Before You Decide" icon="setting">
+    You cannot switch System 1 off. You can learn the situations where it misleads, and in those situations write the question down and count the cases.
   </Card>
 </CardGrid>
 
@@ -313,7 +300,7 @@ In your next design review or architecture discussion, listen for moments where 
 <InArticleAd />
 
 
-In [Lesson 2: Logical Fallacies in Technical Arguments](./logical-fallacies-arguments), we move from internal thinking errors to errors in argumentation. You will learn to recognize the most common logical fallacies in code reviews, design meetings, and technical discussions, and how to respond to them constructively.
+The next lesson, [Logical Fallacies in Technical Arguments](/education/critical-thinking-engineers/logical-fallacies-arguments/), moves from errors inside your own head to errors in arguments between people: how to recognize a broken argument in a review meeting or a sales presentation, and how to answer it without a quarrel.
 
 <CriticalThinkingEngineersComments />
 

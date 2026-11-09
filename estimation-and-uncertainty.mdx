@@ -25,147 +25,135 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 import CriticalThinkingEngineersComments from '../../../../components/critical-thinking-engineers/CriticalThinkingEngineersComments.astro';
 
-Every number you encounter in engineering carries some amount of doubt. A resistor labeled 10 kohm might actually be 9.7 kohm or 10.3 kohm. A temperature sensor reading 23.5 C might be off by half a degree. The sooner you get comfortable with that reality, the better your designs will be. This lesson is about building the habit of asking "how sure am I about this number?" before you commit it to a calculation, a report, or a design. #Estimation #Uncertainty #CriticalThinking
+A standby generator is approved with a fuel budget of 150 USD a month. The first invoice is 430 USD. Nobody lied. Somebody multiplied four guesses, wrote down one number and gave no range, and the reader took the number as a fact. Every number in engineering carries doubt: a meter has a tolerance, a count of outage hours is a memory, a price moves. This lesson shows how to make a fast estimate, how to state the range that belongs to it, and how doubt in the inputs becomes doubt in the result. #Estimation #Uncertainty #CriticalThinking
 
 ## Fermi Estimation: Good Enough in 60 Seconds
 
-Sometimes you do not need an exact answer. You need to know whether something is roughly 10, roughly 1000, or roughly a million. Enrico Fermi was famous for estimating answers to seemingly impossible questions using nothing but basic reasoning and round numbers. The classic example: "How many piano tuners are in Chicago?"
+Often you do not need an exact answer. You need to know whether the answer is near 10, near 1,000 or near a million. The physicist Enrico Fermi was known for answering such questions with a chain of rough guesses and round numbers, so the method carries his name.
 
-You do not need a directory of piano tuners. You need a chain of reasonable guesses.
+### A worked case: diesel for a standby generator
+
+How much will the diesel cost each month for a generator that covers power cuts at a small factory? Nobody has measured it yet. Break the question into factors you can guess, and give each one a best value, a low value and a high value.
+
+| Factor | Low | Best | High |
+|--------|-----|------|------|
+| Hours of power cut in a month | 20 | 40 | 80 |
+| Average load on the generator, kW | 20 | 30 | 40 |
+| Diesel for each kWh, litres | 0.25 | 0.30 | 0.40 |
+| Price of a litre, USD | 1.00 | 1.20 | 1.50 |
 
 <Steps>
-1. Chicago has roughly 3 million people.
-2. An average household has about 2.5 people, so roughly 1.2 million households.
-3. Maybe 1 in 20 households has a piano. That gives about 60,000 pianos.
-4. A piano should be tuned once or twice a year. Call it 1.5 times. That is 90,000 tunings per year.
-5. A tuner can do about 4 tunings per day, works 250 days a year. That is 1000 tunings per tuner per year.
-6. 90,000 / 1000 = about 90 piano tuners.
+1. **Multiply the best values.** $40 \times 30 = 1{,}200$ kWh a month. $1{,}200 \times 0.30 = 360$ litres. $360 \times 1.20 = 432$, so about 430 USD a month.
+
+2. **Find the outer limits.** All low: $20 \times 20 \times 0.25 \times 1.00 = 100$ USD. All high: $80 \times 40 \times 0.40 \times 1.50 = 1{,}920$ USD. The true value is almost surely inside, but this range is too wide to use, because it is unlikely that all four guesses are wrong in the same direction.
+
+3. **Find the likely range.** The hours may be wrong by a factor of 2 in each direction. The other three factors are known within a factor of 1.2 to 1.4. When errors are independent, they partly cancel, and the result is wrong by little more than its worst factor: here about 2.3. So the likely range is $432 / 2.3$ to $432 \times 2.3$, about 190 to 1,000 USD.
+
+4. **State the answer with its range.** "About 430 USD a month, likely between 190 and 1,000." A budget of 150 USD is outside the likely range, and you know that before the first invoice.
 </Steps>
 
-The actual number is somewhere around 100 to 200. Your estimate of 90 is in the right ballpark, and you got there in under a minute. That is the power of Fermi estimation.
+Step 3 also shows where to spend effort. The exact fuel price would hardly narrow the range. One month of logged outage hours would cut it to about 260 to 710 USD.
 
 ### Why Engineers Need This
 
-Fermi estimation is not a party trick. It is a survival skill. Here are situations where it saves you:
-
 <CardGrid>
-<Card title="Sanity Checking" icon="approve-check">
-Your simulation says the bridge needs 50,000 kg of steel. Does that sound right? A quick Fermi estimate using the span, cross-section, and density of steel can tell you if the answer is reasonable before you send the quote to a client.
+<Card title="Checking a claim" icon="approve-check">
+A seller says a 1.5 kW pump will fill a 10,000 litre tank, 60 m above the water, in 10 minutes. Lifting 10,000 kg by 60 m takes $10{,}000 \times 9.81 \times 60 \approx 5.9$ million joules. At 1.5 kW that is 3,900 seconds, about 65 minutes, with a perfect pump. The claim is impossible.
 </Card>
-<Card title="Scoping Projects" icon="list-format">
-"How much storage will our IoT fleet generate per month?" If you have 1000 sensors each sending 100 bytes every 10 seconds, that is about 10 kB/s total, or roughly 26 GB per month. Now you know whether you need a Raspberry Pi or a cloud database.
+<Card title="Sizing a project" icon="list-format">
+How much data will 1,000 sensors store in a month? If each sends 100 bytes every 10 seconds, that is about 10 kB each second in total, or roughly 26 GB a month. Now you know what size of storage to ask for.
 </Card>
-<Card title="Catching Mistakes" icon="warning">
-Your colleague reports that the power consumption of a sensor node is 5 watts. You know a coin cell battery stores roughly 1000 joules. At 5 watts that battery would last 200 seconds. Something is clearly wrong with that measurement.
+<Card title="Catching a mistake" icon="warning">
+A report says the cold room used 12 kWh last month. Its compressor is rated 3 kW and runs about a third of the time: $3 \times 8 \times 30 = 720$ kWh. The report is wrong by a factor of 60. Probably one day was read as one month, or a meter multiplier was missed.
 </Card>
 </CardGrid>
 
 ### Practice: Estimate Before You Calculate
 
-Before you plug numbers into a formula, spend 30 seconds estimating the answer. Round everything to one significant figure. If your detailed calculation comes back wildly different from your estimate, one of them is wrong, and it is usually the detailed one (because of typos, unit errors, or incorrect formulas).
-
-### More Fermi Estimation Examples for Engineers
-
-Try these on your own before looking anything up:
-
-| Question | Approach Hint |
-|----------|--------------|
-| How many bytes of data does a smart home generate per day? | Count sensors, estimate readings per minute, bytes per reading |
-| How long would it take to download the entire internet on a 1 Gbps connection? | Estimate total internet data, divide by bandwidth |
-| How many transistors could fit on your thumbnail? | Thumbnail area in nm^2, transistor pitch, packing density |
-| How much power does your city consume? | Population, average household consumption, industrial factor |
-
-The goal is never to get the exact answer. The goal is to build the habit of checking whether numbers make sense before you trust them.
+Before you use a formula or a spreadsheet, take 30 seconds to estimate the answer with every value rounded to one digit. If the detailed result is far from the estimate, one of them is wrong. It is usually the detailed one: a typing error, a wrong unit or a wrong formula.
 
 ## Error Bars: What They Actually Mean
 
 <InArticleAd />
 
 
+An error bar is a line drawn through a point on a chart. It shows the range in which the true value probably lies. A cold room that used "52 kWh a day, plus or minus 3" is drawn as a point at 52 with a bar from 49 to 55.
+
+Most readers compare the points and do not look at the bars. That is how a saving is "proved" that is not there. Suppose a new door seal is fitted, and the daily energy is measured before (A) and after (B):
+
 ```text
-  Error Bar Interpretation
-  ──────────────────────────────────────────────────────────
+ Bars overlap: a saving is not shown
 
-  OVERLAPPING (cannot claim difference):
-      2.9       3.2       3.5       3.8
-       ├────── A ──────┤
-                  ├────── B ──────┤
-                  ^ overlap zone: ranges intersect
+    46      49      52      55   kWh a day
+            |------ A ------|
+    |------ B ------|
 
-  NON-OVERLAPPING (strong evidence of difference):
-      2.9  3.1  3.3           3.7  3.9  4.1
-       ├── A ──┤               ├── B ──┤
-                   ^ clear gap: no overlap
+ Bars apart: the saving is real
+
+    45  46  47          51  52  53
+                        |-- A --|
+    |-- B --|
 ```
-
-An error bar on a graph is not decoration. It tells you the range within which the true value probably lies. When you see a data point at 3.2 V with error bars stretching from 3.0 V to 3.4 V, the researchers are saying: "We measured 3.2 V, but the real value could reasonably be anywhere in that range."
-
-Most people look at data plots and ignore the error bars entirely. They compare the central points and draw conclusions. This is a mistake.
 
 ### Overlapping Error Bars
 
-If two data points have overlapping error bars, you cannot confidently say they are different. Suppose measurement A gives $3.2 \pm 0.3$ V and measurement B gives $3.5 \pm 0.3$ V. The error bars overlap (A extends to 3.5, B extends down to 3.2). You cannot claim that B is truly higher than A based on this data alone.
+If the bars of two values overlap, you cannot say with confidence that the values differ. Before, $52 \pm 3$ kWh a day. After, $49 \pm 3$ kWh a day. A reaches down to 49 and B reaches up to 52. A claim of "3 kWh a day saved" is not supported by these measurements. Measure for longer, so that the bars become shorter.
 
 ### Non-overlapping Error Bars
 
-If the error bars do not overlap at all, you have much stronger evidence that the two values are genuinely different. Measurement A at $3.2 \pm 0.1$ V and measurement B at $3.8 \pm 0.1$ V have a clear gap between them. That gap is meaningful.
+If there is a clear gap between the bars, the evidence is much stronger. Before, $52 \pm 1$ kWh a day. After, $46 \pm 1$ kWh a day. The gap between 47 and 51 is larger than either bar.
 
 ### Common Mistakes with Error Bars
 
-| Mistake | Why It Matters |
+| Mistake | Why it matters |
 |---------|---------------|
-| Ignoring error bars entirely | You treat uncertain data as if it were exact |
-| Assuming error bars always mean standard deviation | They might be standard error, 95% CI, or min/max |
-| Comparing only central values | Two "different" means might have completely overlapping uncertainty |
-| Not reporting what the error bars represent | Readers cannot interpret your data without this information |
+| Not looking at the bars | You treat uncertain data as exact |
+| Assuming what the bars mean | They may show the scatter of the readings, the uncertainty of the mean, a 95% interval, or the lowest and highest value |
+| Drawing bars and not saying what they show | The reader cannot use them |
 
 ## Significant Figures: Your ADC Is Lying to You
 
 <InArticleAd />
 
 
-A 10-bit ADC on a 3.3 V reference gives you readings from 0 to 1023. When you read a value of 1023 and compute `1023 * 3.3 / 1023`, you get exactly 3.3 V. But what about a reading of 512?
+Significant figures are the digits of a number that carry real information. An ADC (analog to digital converter) is the chip that turns a voltage into a whole number. A 10-bit ADC with a 3.3 V reference gives numbers from 0 to 1023. A reading of 1023 means 3.3 V. What does a reading of 512 mean?
 
 ```
-voltage = 512 * 3.3 / 1023 = 1.65171...
+voltage = 512 * 3.3 / 1023 = 1.65161...
 ```
 
-Your calculator happily gives you ten decimal places. But your ADC only has 10 bits of resolution. That means each step represents $3.3 / 1024 \approx 3.2$ mV. Reporting a voltage of 1.65171064516 V is absurd. You have about 3.2 mV of resolution at best, so the honest answer is 1.652 V, or arguably just 1.65 V.
+The calculator gives many decimal places. The ADC cannot tell apart two voltages that are closer than one step, and one step is $3.3 / 1024 \approx 3.2$ mV. So the digits after the third decimal place carry no information. The honest value is 1.652 V, or 1.65 V.
 
 ### Rules of Thumb for Significant Figures
 
 <Card title="Multiplication and Division" icon="puzzle">
-The result should have the same number of significant figures as the input with the fewest significant figures. If R = 4.7 kohm (2 sig figs) and I = 0.0023 A (2 sig figs), then V = R * I should be reported as 11 V, not 10.81 V.
+Give the result as many significant figures as the input that has the fewest. If $R = 4.7$ kohm (2 figures) and $I = 0.0023$ A (2 figures), report $V = R \times I$ as 11 V, not 10.81 V.
 </Card>
 
 <Card title="Addition and Subtraction" icon="puzzle">
-The result should have the same number of decimal places as the input with the fewest decimal places. If you measure 12.3 V and subtract 0.057 V, report 12.2 V, not 12.243 V.
+Give the result as many decimal places as the input that has the fewest. If you measure 12.3 V and subtract 0.057 V, report 12.2 V, not 12.243 V.
 </Card>
 
 ### The False Precision Trap
 
-False precision is when you report more digits than your measurement can support. It looks scientific, but it is actually dishonest. It implies a level of certainty you do not have.
+False precision means reporting more digits than the measurement supports. It looks careful, and it tells the reader you are more certain than you are.
 
-Here is an everyday example: your kitchen scale reads in 1-gram increments. You weigh a tomato and get 142 g. You then compute the weight in pounds as 142 / 453.592 = 0.31305... pounds. Reporting 0.31305 pounds is false precision. The honest answer is 0.31 pounds, because your scale only gives you three significant figures.
-
-In engineering, false precision can mislead people into thinking a design has tighter tolerances than it actually does.
+A 5,000 litre tank fills in 37 minutes, timed on a watch to the nearest minute. The division gives $5{,}000 / 37 = 135.135\ldots$ litres a minute. The time has two significant figures, so the honest flow is 140 litres a minute, or "about 135". A report that says 135.135 invites the reader to compare it with a pump curve to the last digit.
 
 ### Practical Significance vs. Numerical Precision
 
-There is another dimension to this: even if you can measure something to four decimal places, do those decimal places matter? If you are choosing between two resistor values and the difference is 0.003%, but your circuit works correctly with 5% tolerance components, those extra digits are meaningless. They are numerically precise but practically insignificant.
-
-A good engineer asks not just "how many digits can I report?" but "how many digits actually matter for this application?"
+A second question follows: do the digits you have matter for the decision?
 
 <Tabs>
 <TabItem label="Unnecessary Precision">
-"The sensor reads 23.4872 C. The setpoint is 23.5 C. The error is 0.0128 C."
+"The cold room sensor reads 3.4872 °C. The setpoint is 3.5 °C. The error is 0.0128 °C."
 
-If your HVAC system has 0.5 C hysteresis, reporting the error to four decimal places is pointless. The system will not act on that information.
+The thermostat switches only when the temperature moves 0.5 °C from the setpoint. It will never act on the fourth decimal place.
 </TabItem>
 <TabItem label="Appropriate Precision">
-"The sensor reads 23.5 C. The setpoint is 23.5 C. Within tolerance."
+"The cold room sensor reads 3.5 °C. The setpoint is 3.5 °C. Within the limit."
 
-This tells you everything you need to know for the application. The extra digits added nothing useful.
+This is all the operator needs.
 </TabItem>
 </Tabs>
 
@@ -174,11 +162,13 @@ This tells you everything you need to know for the application. The extra digits
 <InArticleAd />
 
 
-When you combine uncertain quantities in a formula, the uncertainties combine too. If your resistor is $R = 10 \pm 0.5$ kohm (5% tolerance) and your capacitor is $C = 100 \pm 10$ nF (10% tolerance), what is the uncertainty in $\tau = RC$?
+When you put uncertain values into a formula, the result is uncertain too. Propagation of uncertainty is the calculation of how much.
+
+The example is a resistor and a capacitor that form a filter. Its time constant $\tau = RC$ is the time the filter takes to respond. The resistor is $R = 10 \pm 0.5$ kohm (5% tolerance) and the capacitor is $C = 100 \pm 10$ nF (10% tolerance). How uncertain is $\tau$?
 
 ### The Simple Rule for Products
 
-For multiplication and division, relative (percentage) uncertainties add in quadrature:
+When values are multiplied or divided, work with relative uncertainties, which are the uncertainties as fractions of the values. Square each one, add the squares and take the square root. This is called adding in quadrature. It gives less than a plain sum, because two independent errors seldom reach their limits in the same direction together. Here $\delta$ means "the uncertainty of":
 
 $$
 \frac{\delta \tau}{\tau} = \sqrt{\left(\frac{\delta R}{R}\right)^2 + \left(\frac{\delta C}{C}\right)^2}
@@ -188,9 +178,11 @@ $$
 \frac{\delta \tau}{\tau} = \sqrt{(0.05)^2 + (0.10)^2} = \sqrt{0.0025 + 0.01} = \sqrt{0.0125} \approx 0.112
 $$
 
-So $\tau = RC = 10\text{k} \times 100\text{n} = 1.0$ ms with about 11.2% uncertainty. That means $\tau = 1.0 \pm 0.11$ ms.
+So $\tau = RC = 10\text{k} \times 100\text{n} = 1.0$ ms with about 11.2% uncertainty: $\tau = 1.0 \pm 0.11$ ms. This is the same rule that gave the likely range of the diesel estimate.
 
-The following Monte Carlo simulation computes the RC time constant and its uncertainty by sampling component values from their tolerance distributions. It then compares the result to the analytical formula above.
+Note what kind of number 11.2% is. The inputs are tolerance limits, so it is a combined limit that nearly all parts will meet. It is not a standard deviation, the usual measure of scatter. If a part is equally likely to have any value inside its tolerance band of half-width $a$, its standard deviation is $a/\sqrt{3}$, so the standard deviation of $\tau$ is $11.2\% / \sqrt{3} \approx 6.5\%$.
+
+The program below checks the formula by trial. It builds 100,000 imaginary filters, each with a resistor and a capacitor drawn at random from inside their tolerance bands (a Monte Carlo simulation), and measures the scatter of $\tau$. The simulated standard deviation is 0.0645 ms, which matches 6.5%, and 95% of the values fall between 0.885 ms and 1.121 ms, close to the 11.2% limit.
 
 ```python title="error_propagation_monte_carlo.py"
 import numpy as np
@@ -214,9 +206,12 @@ tau_mean = np.mean(tau_samples)
 tau_std = np.std(tau_samples)
 tau_lo, tau_hi = np.percentile(tau_samples, [2.5, 97.5])
 
-# Analytical propagation (quadrature of relative uncertainties)
+# Analytical propagation (quadrature of relative uncertainties).
+# A tolerance is a limit, not a standard deviation. For a uniform
+# distribution of half-width a, the standard deviation is a / sqrt(3).
 tau_nominal = R_nom * C_nom
-rel_unc = np.sqrt(R_tol**2 + C_tol**2)
+rel_limit = np.sqrt(R_tol**2 + C_tol**2)   # combined tolerance limit
+rel_unc = rel_limit / np.sqrt(3)           # combined standard deviation
 tau_analytical_std = tau_nominal * rel_unc
 
 print(f"R = {R_nom/1e3:.0f} kohm +/- {R_tol*100:.0f}%,  C = {C_nom*1e9:.0f} nF +/- {C_tol*100:.0f}%")
@@ -226,62 +221,52 @@ print(f"  Mean:    {tau_mean*1e3:.4f} ms")
 print(f"  Std:     {tau_std*1e3:.4f} ms")
 print(f"  95% CI:  [{tau_lo*1e3:.4f}, {tau_hi*1e3:.4f}] ms\n")
 print(f"Analytical propagation:")
+print(f"  Limit:   {tau_nominal*rel_limit*1e3:.4f} ms  (relative = {rel_limit*100:.1f}%)")
 print(f"  Std:     {tau_analytical_std*1e3:.4f} ms  (relative = {rel_unc*100:.1f}%)")
-print(f"\nThe Monte Carlo and analytical results agree closely.")
-print(f"Your 1.0 ms time constant is really 1.0 +/- {tau_std*1e3:.2f} ms.")
+print(f"\nThe Monte Carlo and analytical standard deviations agree closely.")
+print(f"Your 1.0 ms time constant is really 1.0 +/- {tau_std*1e3:.2f} ms (one standard deviation).")
 ```
 
 ### The Simple Rule for Sums
 
-For addition and subtraction, absolute uncertainties add in quadrature:
+When values are added or subtracted, the absolute uncertainties (in the unit of the value, not in percent) add in quadrature:
 
 $$
 \delta(A + B) = \sqrt{(\delta A)^2 + (\delta B)^2}
 $$
 
-If you measure two voltages $V_1 = 3.30 \pm 0.05$ V and $V_2 = 1.20 \pm 0.03$ V, the difference is:
+This rule has a hard consequence for any loss found by subtraction. A water meter at the supply reads $120.0 \pm 2.4$ m³ for a day. The customer meters add up to $111.0 \pm 2.2$ m³. The loss is the difference:
 
 $$
-V_1 - V_2 = 2.10 \pm \sqrt{0.05^2 + 0.03^2} = 2.10 \pm 0.058 \text{ V}
+120.0 - 111.0 = 9.0 \pm \sqrt{2.4^2 + 2.2^2} = 9.0 \pm 3.3 \text{ m}^3
 $$
+
+Each meter is good to 2%, and the loss is known only to 36%. The difference of two large numbers that are close together is always much less certain than either number.
 
 ### Tolerance Stackup in Practice
 
-This is not abstract theory. In mechanical engineering, if you stack five parts each with $\pm 0.1$ mm tolerance, the total stackup is not $\pm 0.5$ mm (that is the worst case). The statistical stackup is $\pm 0.1 \times \sqrt{5} \approx \pm 0.22$ mm. Knowing the difference between worst-case and statistical stackup can save you money on manufacturing tolerances.
+If you stack five parts, each with a tolerance of $\pm 0.1$ mm, the worst case is $\pm 0.5$ mm: all five at their limit in the same direction. The statistical result is $\pm 0.1 \times \sqrt{5} \approx \pm 0.22$ mm. Designing to 0.22 mm when 0.5 mm is not needed saves money on every part.
 
 ### When to Use Worst-Case vs. Statistical Analysis
 
 | Situation | Use |
 |-----------|-----|
-| Safety-critical systems (medical, automotive, aerospace) | Worst-case analysis |
-| High-volume consumer products where occasional failure is acceptable | Statistical analysis |
-| Low-volume production where every unit must work | Worst-case analysis |
-| Early design phase, rough sizing | Statistical analysis |
-| Final verification before manufacturing release | Both, and compare |
-
-The choice between worst-case and statistical analysis is itself an engineering judgment. In general, if the consequence of exceeding the tolerance is catastrophic (a bridge collapses, a pacemaker fails), use worst-case. If the consequence is minor (a slightly loose fit that can be reworked), statistical analysis saves cost.
-
-### Uncertainty in Software
-
-Uncertainty is not just for hardware. Software systems have uncertainty too, though it takes different forms:
-
-- **Latency uncertainty.** A network request might take 10 ms or 500 ms. Your system design needs to handle both.
-- **Load uncertainty.** You might get 100 requests per second or 10,000. Your capacity planning must account for the range.
-- **Input uncertainty.** User inputs might be well-formed or garbage. Your parser needs to handle both gracefully.
-- **Clock uncertainty.** System clocks drift. NTP corrections are not instantaneous. Distributed timestamps might disagree.
-
-The same principles apply: estimate the range, propagate through your design, and report your confidence honestly. "The system handles up to 5000 requests per second" is much more useful than "the system is fast."
+| A failure can injure people | Worst case |
+| Few units, and each one must work | Worst case |
+| Many units, and a rare failure is acceptable | Statistical |
+| Early design, rough sizing | Statistical |
+| Final check before release | Both, and compare |
 
 ## Confidence Intervals
 
 <InArticleAd />
 
 
-When you report a measurement as $23.5 \pm 0.3$ C, the $\pm 0.3$ could mean several things. Is it the standard deviation of your measurements? The range? A 95% confidence interval?
+A report says $23.5 \pm 0.3$ °C. The $\pm 0.3$ may be the scatter of the readings, the lowest and highest reading, or a 95% confidence interval. These are different sizes, so a report must say which one it is.
 
 ### What a 95% Confidence Interval Means
 
-A 95% confidence interval means: if you repeated this measurement many times and computed the interval each time, about 95% of those intervals would contain the true value. It does not mean there is a 95% probability the true value is in this particular interval (a subtle but important distinction that trips up even experienced scientists).
+A confidence interval is a range calculated from your readings by a fixed method. "95%" describes the method: if you repeated the whole measurement many times and calculated an interval each time, about 95 of every 100 intervals would contain the true value. It does not say that the true value has a 95% probability of being in this one interval, a difference that many experienced people miss.
 
 ### Computing a Confidence Interval
 
@@ -300,21 +285,21 @@ Suppose you measure a voltage 10 times and get these values:
 | 9 | 3.31 |
 | 10 | 3.30 |
 
-The mean is $\bar{x} = 3.300$ V. The standard deviation is $s = 0.018$ V. The standard error of the mean is $s / \sqrt{n} = 0.018 / \sqrt{10} = 0.0057$ V.
+The mean is $\bar{x} = 3.300$ V. The standard deviation, which measures the scatter of single readings, is $s = 0.018$ V. The mean of 10 readings is steadier than one reading: its uncertainty, the standard error, is $s / \sqrt{n} = 0.018 / \sqrt{10} = 0.0057$ V.
 
-For a 95% confidence interval with 9 degrees of freedom, the t-value is about 2.26. So the 95% CI is:
+To turn the standard error into a 95% interval, multiply it by a factor from the t table, which is larger when the readings are few. For 10 readings (9 degrees of freedom) it is about 2.26:
 
 $$
 3.300 \pm 2.26 \times 0.0057 = 3.300 \pm 0.013 \text{ V}
 $$
 
-You would report this as: "The voltage is 3.300 V (95% CI: 3.287 to 3.313 V)."
+Report it as: "The voltage is 3.300 V (95% confidence interval 3.287 to 3.313 V)."
 
 ### Measurement Uncertainty Budgets
 
-In professional metrology, you build an uncertainty budget: a table listing every source of uncertainty and its contribution. For a temperature measurement, your budget might look like this:
+An uncertainty budget is a table of every source of uncertainty in a measurement and the size of each. For a temperature measurement:
 
-| Source | Type | Uncertainty (C) |
+| Source | Type | Uncertainty (°C) |
 |--------|------|-----------------|
 | Sensor calibration | Systematic | 0.10 |
 | ADC quantization | Systematic | 0.05 |
@@ -322,46 +307,42 @@ In professional metrology, you build an uncertainty budget: a table listing ever
 | Noise (random) | Random | 0.08 |
 | **Combined** | | **0.14** |
 
-The combined uncertainty is the quadrature sum of all sources: $\sqrt{0.10^2 + 0.05^2 + 0.02^2 + 0.08^2} = 0.14$ C.
+The combined value is the sum in quadrature: $\sqrt{0.10^2 + 0.05^2 + 0.02^2 + 0.08^2} = 0.14$ °C. The largest source decides most of the total, so that is the one to improve.
 
 ### Systematic vs. Random Uncertainty
 
-Notice the "Type" column in the table above. There are two fundamentally different kinds of uncertainty:
+The "Type" column separates two kinds of uncertainty that need different cures:
 
 <CardGrid>
 <Card title="Random (Type A)" icon="random">
-Random uncertainty varies unpredictably from measurement to measurement. Electrical noise is a classic example. You can reduce random uncertainty by averaging multiple measurements: the standard error decreases as $1/\sqrt{n}$, so 100 measurements give 10x less random uncertainty than a single measurement.
+Random uncertainty changes from one reading to the next, as electrical noise does. Averaging reduces it: the standard error falls as $1/\sqrt{n}$, so 100 readings give 10 times less random uncertainty than one.
 </Card>
 <Card title="Systematic (Type B)" icon="setting">
-Systematic uncertainty is consistent and repeatable. A miscalibrated sensor always reads 0.2 C too high. Averaging does not help because every measurement has the same bias. You reduce systematic uncertainty through calibration, better equipment, or correction formulas.
+Systematic uncertainty is the same in every reading. A sensor that reads 0.2 °C too high does so each time, and averaging does not help. Calibration against a better instrument reduces it.
 </Card>
 </CardGrid>
 
-When you see a measurement that looks "stable" (low variation between readings), do not assume it is accurate. It might have low random uncertainty but high systematic uncertainty. The readings are precise (they agree with each other) but not accurate (they are all wrong by the same amount).
+One caution about the labels. In the formal guide to measurement uncertainty (the GUM), Type A and Type B describe how an uncertainty is evaluated: Type A from statistics on repeated readings, Type B from other information such as a datasheet or a calibration certificate. They often line up with random and systematic effects, as in the table above, but they are not the same classification.
+
+Readings that agree closely with each other are precise. They are not necessarily accurate: all of them may be wrong by the same amount.
 
 ## Putting It All Together
 
 <InArticleAd />
 
 
-Here is a practical workflow for handling numbers honestly in engineering:
-
 <Steps>
-1. **Estimate first.** Before you measure or calculate, do a quick Fermi estimate. This gives you a sanity check.
-2. **Know your instrument's limits.** What is the resolution? What is the accuracy? These set a floor on your uncertainty.
-3. **Report the right number of significant figures.** Match your reporting precision to your measurement precision. No more, no less.
-4. **Propagate uncertainty through calculations.** If you combine uncertain quantities, the result is uncertain too. Compute it.
-5. **State your confidence.** When you report a number, say what the uncertainty means. Is it a standard deviation? A 95% confidence interval? A worst-case bound?
+1. **Estimate first.** Before you measure or calculate, make a Fermi estimate with a range.
+2. **Know the limits of your instrument.** Its resolution and its accuracy set the smallest uncertainty you can have.
+3. **Report the right number of significant figures.** The digits must match what the measurement supports.
+4. **Propagate the uncertainty.** If the inputs are uncertain, calculate how uncertain the result is.
+5. **Say what your range means.** A standard deviation, a 95% confidence interval and a worst case limit are different things.
 </Steps>
 
-### The Key Question
-
-The single most important habit you can build as an engineer is asking: **"How sure am I about this number?"**
-
-Not just "what is the number?" but "what is the range of values it could reasonably be?" If you cannot answer that question, you do not really know the number. You have a guess that looks precise.
+For every number, ask: **"How sure am I about this number?"** If you cannot give its range, you have a guess that looks exact.
 
 <Card title="Think About It" icon="information">
-Next time you read a spec sheet, notice how the manufacturer reports values. A 10 kohm resistor with 1% tolerance is $10.0 \pm 0.1$ kohm. A 3.3 V regulator with 2% accuracy outputs $3.3 \pm 0.066$ V. These are not just numbers on a page. They are promises about what the component will actually do in your circuit.
+A datasheet states a range for the same reason. A 10 kohm resistor with 1% tolerance is $10.0 \pm 0.1$ kohm. A 3.3 V regulator with 2% accuracy gives $3.3 \pm 0.066$ V. The maker promises the range, not the middle value.
 </Card>
 
 ## Common Mistakes Engineers Make With Numbers
@@ -369,94 +350,88 @@ Next time you read a spec sheet, notice how the manufacturer reports values. A 1
 <InArticleAd />
 
 
-Even experienced engineers routinely make mistakes with uncertainty and estimation. Here are the most frequent ones, along with how to avoid them.
-
 ### Treating Typical Values as Guaranteed
 
-Datasheets often list three columns: minimum, typical, and maximum. The typical value is measured on a sample of parts under specific conditions. It is not a guarantee. If your design only works at the typical value and fails at the minimum or maximum, your design is broken.
+A datasheet often gives a minimum, a typical and a maximum value. The typical value was measured on a sample of parts in stated conditions. It is not a promise.
 
 <Card title="Design to the Limits" icon="warning">
-Always design to the minimum and maximum values in the datasheet. The typical value tells you what is common. The min/max values tell you what is possible. Your design must work across the full range, not just at the center.
+Design for the minimum and the maximum in the datasheet. The typical value tells you what is common. The limits tell you what you may receive. A pump chosen on its typical flow will disappoint on the day you receive one at the minimum.
 </Card>
 
 ### Ignoring Temperature Effects
 
-Component values drift with temperature. A ceramic capacitor rated at 100 nF might actually be 80 nF at your operating temperature if it uses X5R dielectric. A crystal oscillator rated at 20 MHz might be 20.0004 MHz on a hot day. If your design is temperature-sensitive, check the temperature coefficients in the datasheet and include them in your uncertainty budget.
+Values drift with temperature. A ceramic capacitor rated at 100 nF might actually be 80 nF at your operating temperature and DC bias voltage if it uses X5R dielectric. A crystal oscillator rated at 20 MHz might be 20.0004 MHz on a hot day. Put the temperature figures from the datasheet in your uncertainty budget.
 
 ### Confusing Resolution with Accuracy
 
-A 16-bit ADC has 65,536 counts of resolution. That does not mean your measurement is accurate to 1 part in 65,536. The ADC also has offset error, gain error, nonlinearity, and noise, all of which are separate from resolution. A 16-bit ADC with 2 LSB of noise and 5 LSB of offset error effectively gives you about 13 to 14 bits of useful accuracy, not 16.
+Resolution is the smallest change an instrument can show. Accuracy is how close its reading is to the true value. A display that shows 4.37 °C has a resolution of 0.01 °C. If the datasheet says the accuracy is 0.5 °C, the true temperature is somewhere between 3.87 and 4.87 °C.
 
-| Specification | What It Means |
+The same holds inside the instrument. A 16-bit ADC has 65,536 steps, but it also has offset error, gain error and noise. With 2 steps of noise and 5 steps of offset error, about 13 to 14 of its 16 bits are useful.
+
+| Specification | What it means |
 |---------------|---------------|
 | Resolution | Smallest change you can detect |
 | Accuracy | How close the reading is to the true value |
-| Precision | How repeatable the reading is |
+| Precision | How well repeated readings agree |
 | Noise | Random variation in the reading |
 
-High resolution with poor accuracy is like a ruler with very fine markings that starts at 0.3 instead of 0.0. You can read it to the nearest 0.1 mm, but every reading is off by 0.3 mm.
+High resolution with poor accuracy is a ruler with very fine marks that begins at 0.3 mm and not at 0. You can read it to 0.1 mm, and every reading is wrong by 0.3 mm.
 
 ### Forgetting About Units
 
-Unit errors have crashed spacecraft (the Mars Climate Orbiter was lost because one team used metric units and another used imperial). They have caused drug overdoses in hospitals. They are among the most common and most preventable engineering errors.
+The Mars Climate Orbiter was lost because one team used metric units and another used imperial units. The same error, on a smaller scale, happens whenever litres a minute meet cubic metres an hour in one spreadsheet.
 
-When you propagate uncertainty through a calculation, carry the units through every step. If the units do not come out right at the end, you made an error somewhere. Units are not just labels; they are a type-checking system for physics.
+Carry the units through every step of a calculation. If the units of the result are wrong, the calculation is wrong.
 
 ## How Much Effort to Spend on Uncertainty
 
 <InArticleAd />
 
 
-Not every number deserves a full uncertainty analysis. The key question is: does the uncertainty matter for this decision?
+Ask one question first: would a different value inside the range change the decision?
 
 <Tabs>
 <TabItem label="Quick Estimate Is Fine">
-- Choosing between a 5 V and a 12 V power supply. You do not need to know your load current to four significant figures.
-- Sizing a heatsink. If the calculation says you need 10 C/W and the heatsink is rated 5 C/W, you have plenty of margin.
-- Estimating project duration. "About three months" is sufficient for a planning conversation.
+- A large margin. If the load needs 6 kW and the generator gives 20 kW, the load does not need a third digit.
+- A choice that is cheap to change, such as an alarm limit.
+- A planning talk. "About three months" is enough.
 </TabItem>
 <TabItem label="Full Analysis Needed">
-- Designing a precision measurement system. Every millivolt matters.
-- Tolerance analysis for mass production. A 1% failure rate on a million units is 10,000 unhappy customers.
-- Safety-critical calculations. Bridge loading, pressure vessel stress, radiation dose.
-- Comparing two options that are close in performance. If MCU A draws 50 uA and MCU B draws 55 uA, you need to know the uncertainty to decide whether the difference is real.
+- A claim of a saving. If a supplier's device is said to save 5% and your meter is good to 2%, the uncertainty decides whether the saving exists.
+- Many units. A 1% failure rate on a million units is 10,000 failures.
+- Safety: the load on a structure, the pressure in a vessel.
+- Two options that are close. If one pump uses 50 kWh a day and another 55 kWh, you need the uncertainty to know whether the difference is real.
 </TabItem>
 </Tabs>
 
-The goal is not to analyze everything to the last decimal place. The goal is to know when precision matters and when it does not, and to act accordingly.
-
-### The Cost of Over-Precision
-
-Demanding unnecessary precision costs time and money. If your tolerance analysis says you need a 0.1% resistor but a 1% resistor would work fine, you are paying 5 to 10 times more per resistor for no benefit. If you spend three hours computing a confidence interval for a measurement that only needs to be "roughly 3 V," you have wasted three hours.
-
-Good engineering judgment means matching the precision of your analysis to the needs of your application. Not more, not less.
+Precision that is not needed costs money and time. A 0.1% resistor where a 1% resistor would work costs more for no benefit. Match the effort to the decision.
 
 ## Exercises
 
 <InArticleAd />
 
 
-1. **Fermi estimation.** How many lines of code are in the Linux kernel? Start from what you know (it is a large project, started in 1991, has thousands of contributors) and work your way to an order-of-magnitude estimate. Then look up the actual number and see how close you got.
+1. **Fermi estimation.** How many litres of water does your site use in a day? Break the question into at least four factors, give each a low, a best and a high value, and state your answer with a likely range. Then read the meter on two days and compare.
 
 2. **Significant figures.** Your 12-bit ADC has a 5.0 V reference. You read a raw value of 2048. How many significant figures should you report in the computed voltage? What is the honest voltage value?
 
 3. **Error propagation.** You are designing a voltage divider with $R_1 = 10 \pm 0.5$ kohm and $R_2 = 20 \pm 1.0$ kohm. The output voltage is $V_{out} = V_{in} \times R_2 / (R_1 + R_2)$. If $V_{in} = 5.00 \pm 0.05$ V, what is $V_{out}$ and its uncertainty?
 
-4. **Confidence intervals.** You measure the response time of a web server 20 times and get a mean of 142 ms with a standard deviation of 18 ms. Compute the 95% confidence interval for the mean response time. (Hint: the t-value for 19 degrees of freedom at 95% is about 2.09.)
+4. **Confidence intervals.** You record the daily energy use of a cold room on 20 days and get a mean of 142 kWh with a standard deviation of 18 kWh. Compute the 95% confidence interval for the mean daily use. (Hint: the t-value for 19 degrees of freedom at 95% is about 2.09.)
 
 ## Summary
 
 <InArticleAd />
 
 
-Every engineering number carries uncertainty, and ignoring that uncertainty leads to false confidence in your designs. Fermi estimation gives you fast sanity checks. Significant figures prevent you from claiming precision you do not have. Error propagation tells you how uncertainties combine. Confidence intervals let you state precisely how sure you are. The habit of asking "how sure am I?" about every number is one of the most valuable thinking tools an engineer can develop.
+Every number carries uncertainty, and a number without a range invites false confidence. A Fermi estimate gives a fast check and shows which factor to measure first. Significant figures stop you claiming precision you do not have. Propagation shows how uncertainties combine, and why a small difference of two large readings is weak evidence. A confidence interval states how sure you are, if you say what it is.
 
 ## Seen in the field
 
 <InArticleAd />
 
 
-The move in this lesson that pays most often is bounding a quantity you cannot measure directly by measuring it under conditions where every other contribution is zero. A plant air compressor is a clean example: during production you cannot separate air that did work from air that leaked, but at three in the morning with the factory shut, everything the compressor produces is escaping. That single reading turns an unmeasurable loss into a repair budget, worked through in [the load that runs when nobody is there](/blog/remote-monitoring/compressed-air-leaks-cost/).
+A quantity that cannot be measured directly can often be bounded by measuring it when every other contribution is zero. A plant air compressor is a clear example. During production you cannot separate the air that did work from the air that leaked. At three in the morning, with the factory shut, everything the compressor produces is escaping. That one reading turns an unknown loss into a repair budget, worked through in [the load that runs when nobody is there](/blog/remote-monitoring/compressed-air-leaks-cost/).
 
 <CriticalThinkingEngineersComments />
 

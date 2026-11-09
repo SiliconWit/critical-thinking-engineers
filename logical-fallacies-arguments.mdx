@@ -25,30 +25,19 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 import CriticalThinkingEngineersComments from '../../../../components/critical-thinking-engineers/CriticalThinkingEngineersComments.astro';
 
-Engineers like to think they argue with pure logic. In practice, technical debates are full of reasoning errors that look convincing on the surface but fall apart under scrutiny. A fallacy is not just a wrong conclusion; it is a broken argument structure. The conclusion might even be correct, but the reasoning used to reach it is invalid. Recognizing these patterns lets you evaluate arguments on their actual merits and make your own arguments stronger. #CriticalThinking #LogicalFallacies #Engineering
+A supplier tells your manager that a fuel saving device "cut fuel use by 15% at three customer sites", and the purchase is approved in the same meeting. Nobody asked how many sites were tried. The claim may even be true, but the argument for it is broken, and a broken argument gives you no reason to believe its conclusion. Such an argument is called a fallacy. This lesson shows the fallacies that appear most often in meetings, reviews and sales claims, with a calm answer to each. #CriticalThinking #LogicalFallacies #Engineering
 
 ## What Makes an Argument Valid?
 
-A valid argument has premises that, if true, guarantee the conclusion. A sound argument is valid and its premises are actually true. A fallacy is an argument where the conclusion does not follow from the premises, regardless of whether the conclusion happens to be correct.
+An argument has premises (the statements it starts from) and a conclusion. Three words describe it:
+
+- An argument is **valid** when the conclusion must be true if the premises are true.
+- An argument is **sound** when it is valid and its premises really are true.
+- A **fallacy** is an argument whose conclusion does not follow from its premises. The conclusion may still be true by luck. The argument simply gives it no support.
 
 <Card title="Why Fallacies Matter in Engineering" icon="star">
-In a design meeting, the best technical solution does not always win. The most persuasive argument wins. If that argument contains a fallacy, your team might adopt an inferior design. Conversely, if your valid argument gets shot down by a fallacious counter-argument that you cannot identify, you lose the debate despite being right. Recognizing fallacies is a practical engineering skill, not an academic exercise.
+In a meeting, the most persuasive argument wins, and it is not always the best technical answer. If the winning argument holds a fallacy, your team may choose the worse option. If you cannot say what is wrong with a bad reply to your own good argument, you lose although you are right.
 </Card>
-
-```text
-  Logical Fallacies: Categories
-  ──────────────────────────────────────────────────────────
-  ATTACK THE PERSON      DISTORT THE ARGUMENT   FALSE REASONING
-  ─────────────────────  ─────────────────────  ──────────────
-  Ad Hominem             Straw Man              False Dilemma
-  (dismiss by attacking) (misrepresent)         (only two options)
-
-  Genetic Fallacy        Red Herring            Slippery Slope
-  (judge by origin)      (change subject)       (cascade disaster)
-
-  Appeal to Authority    Circular Reasoning     Hasty Generalization
-  (trust the person)     (beg the question)     (one case = rule)
-```
 
 ## Fallacies That Attack the Person or Source
 
@@ -57,40 +46,29 @@ In a design meeting, the best technical solution does not always win. The most p
 
 ### Ad Hominem (Attack the Person)
 
-**Definition:** Dismissing an argument by attacking the person making it, rather than addressing the argument itself.
+**Definition:** Rejecting an argument by attacking the person who makes it, in place of the argument.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    During a code review, a junior developer suggests refactoring the database layer. A senior engineer responds: "You have been here three months. You do not understand the codebase well enough to suggest architectural changes." The junior developer's experience level is irrelevant to whether the refactoring idea has technical merit. The argument should be evaluated on its own terms.
+    A new operator says the stroke setting of the chlorine dosing pump looks too high for the flow. The supervisor answers: "You have been here three months. You do not know this plant." How long the operator has worked there does not change the dose. The setting can be checked against the flow in ten minutes.
+
+    A close relative is the genetic fallacy: judging an idea by where it came from ("that procedure came from the night shift, so ignore it").
   </TabItem>
   <TabItem label="How to Counter">
-    Redirect to the argument: "That may be true about my experience, but let us evaluate the refactoring proposal on its technical merits. Here are the specific problems it solves." In your own reasoning, ask: "Would this argument be valid if someone else made it?"
-  </TabItem>
-</Tabs>
-
-### Genetic Fallacy
-
-**Definition:** Judging an idea based on its origin rather than its content.
-
-<Tabs>
-  <TabItem label="Engineering Example">
-    "That library was written by a game developer, so it will not be suitable for our embedded system." The author's background does not determine the library's suitability. Its API, memory footprint, performance characteristics, and test coverage do.
-  </TabItem>
-  <TabItem label="How to Counter">
-    Evaluate the artifact, not its origin. "Where the library came from does not matter. Let us benchmark it against our memory and latency requirements and see if it fits."
+    Return to the claim: "That is true about my experience. Can we check the setting against today's flow?" In your own thinking, ask: "Would I accept this argument if another person made it?"
   </TabItem>
 </Tabs>
 
 ### Appeal to Authority
 
-**Definition:** Accepting a claim because someone with authority or prestige said it, rather than because of supporting evidence.
+**Definition:** Accepting a claim because a person of rank or fame said it, with no supporting evidence.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    "Linus Torvalds says that debuggers make you lazy, so we should not use GDB." Torvalds is an expert in kernel development, but his personal preference about debugging tools is not a technical argument. The question is whether GDB helps your team find bugs faster, not whether a famous person approves.
+    "The chief engineer says vibration checks are a waste of time on small motors, so we do not do them." The chief engineer may be right. But rank is not the evidence. The evidence is in the failure records: how many small motors failed last year, what each failure cost, and how many of them a check would have found.
   </TabItem>
   <TabItem label="How to Counter">
-    Separate the authority's expertise from the specific claim. "That is an interesting opinion, but what evidence supports or contradicts the idea that debuggers reduce our debugging efficiency in this project?"
+    Separate the person from the claim: "What do our failure records say about small motors?" An expert's opinion is a good reason to look at the evidence. It does not replace it.
   </TabItem>
 </Tabs>
 
@@ -101,48 +79,48 @@ In a design meeting, the best technical solution does not always win. The most p
 
 ### Straw Man
 
-**Definition:** Misrepresenting someone's argument to make it easier to attack, then attacking the distorted version.
+**Definition:** Changing another person's argument into a weaker one, then attacking the weaker one.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    **Developer A:** "We should add unit tests for the critical path modules."
+    **Technician A:** "We should record the cold room temperature every five minutes."
 
-    **Developer B:** "So you want us to stop shipping features and spend the next month writing tests for every function? We have deadlines."
+    **Manager B:** "So you want staff to sit and watch a screen all day and stop doing their real work? We cannot afford that."
 
-    Developer A suggested testing critical path modules. Developer B distorted this into "test every function and stop all feature work." The distorted version is easy to reject, but it is not what was proposed.
+    A proposed an automatic record. B changed it into "staff watching screens", which is easy to reject and was never proposed.
   </TabItem>
   <TabItem label="How to Counter">
-    Restate the original argument accurately: "I did not suggest testing everything. I suggested unit tests for the three modules that handle payment processing, because a bug there costs us the most. That is about two days of work, not a month."
+    State the original argument again, exactly: "I did not suggest that anyone watches a screen. A logger records the temperature by itself, and staff look only when it sends an alarm."
   </TabItem>
 </Tabs>
 
 ### Red Herring
 
-**Definition:** Introducing an irrelevant topic to divert attention from the original argument.
+**Definition:** Bringing in a subject that has nothing to do with the question, so that attention moves away from it.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    **Engineer A:** "Our API response times have degraded by 40% since the last release. We need to investigate."
+    **Engineer A:** "The generator uses 12% more fuel for each kWh since the last service. We should find out why."
 
-    **Engineer B:** "Well, our uptime has been 99.97% this quarter, which is better than last quarter."
+    **Engineer B:** "It has started first time on every test this quarter. That is better than last quarter."
 
-    Uptime is a different metric from response time. The uptime fact is true but irrelevant to the performance regression being discussed. It diverts the conversation away from the actual problem.
+    Reliable starting is true and good, and it is a different measurement. It says nothing about the fuel.
   </TabItem>
   <TabItem label="How to Counter">
-    Acknowledge the tangent and redirect: "Good to hear about uptime. That is a separate metric though. The question on the table is why response times jumped 40%. Let us stay on that."
+    Accept the point and return: "Good news on starting. The question here is the 12% on fuel. Can we stay with that?"
   </TabItem>
 </Tabs>
 
 ### Equivocation
 
-**Definition:** Using a word with multiple meanings and switching between them mid-argument.
+**Definition:** Using one word with two meanings and changing between them inside the argument.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    "Our system is 'real-time.' Therefore it needs an RTOS." The word "real-time" means different things: in marketing it often means "fast" or "live updating," while in engineering it means "guaranteed worst-case response times." A dashboard that updates every second is "real-time" in the marketing sense but does not need deterministic scheduling guarantees.
+    "The pressure sensor is accurate to 1%, so our 5 bar reading is good to 0.05 bar." The word "accurate" is doing two jobs. On most datasheets 1% means 1% of the full range. For a 0 to 100 bar sensor that is 1 bar, which is 20% of a 5 bar reading, not 1% of it.
   </TabItem>
   <TabItem label="How to Counter">
-    Define terms precisely: "When you say 'real-time,' do you mean we need guaranteed response within a specific deadline, or do you mean the data should update quickly? Those lead to very different architecture decisions."
+    Ask for the exact meaning: "Is that 1% of the reading or 1% of full scale?" Many arguments end when the two sides find they were using one word for two things.
   </TabItem>
 </Tabs>
 
@@ -157,10 +135,10 @@ In a design meeting, the best technical solution does not always win. The most p
 
 <Tabs>
   <TabItem label="Engineering Example">
-    "Either we rewrite the entire system in Rust, or we accept that we will keep having memory safety bugs in C." This ignores many intermediate options: using static analysis tools, adopting safer C coding standards, rewriting only the most critical modules in Rust, using memory-safe wrappers, or adding runtime memory checks.
+    "Either we rewrite the entire system in Rust, or we accept that we will keep having memory safety bugs in C." This leaves out many options between the two: static analysis tools, a safer C coding standard, a rewrite of only the most critical modules, or memory checks at run time.
   </TabItem>
   <TabItem label="How to Counter">
-    Name the missing options: "Those are not the only two choices. We could also use AddressSanitizer in CI, adopt MISRA C guidelines for new code, or rewrite just the network stack in Rust while keeping the rest in C."
+    Name the missing options: "Those are not the only two choices. We could also run a memory checker on every build, or rewrite only the network code."
   </TabItem>
 </Tabs>
 
@@ -170,23 +148,23 @@ In a design meeting, the best technical solution does not always win. The most p
 
 <Tabs>
   <TabItem label="Engineering Example">
-    "There is no point adding input validation here because a determined attacker could still bypass it through the hardware debug port." The fact that one attack vector remains does not mean closing other attack vectors is worthless. Security is defense in depth, not all-or-nothing.
+    "There is no point fitting a dry run cut-out to the borehole pump. It will not protect the motor from a lightning surge." True, and beside the point. Dry running and surges are different causes of failure, and removing one of them is worth doing while the other remains.
   </TabItem>
   <TabItem label="How to Counter">
-    Acknowledge the limitation and reframe: "You are right that it does not stop a hardware attack. But it does stop the 95% of attacks that come through the network interface. Reducing the attack surface is still valuable even if we cannot eliminate it entirely."
+    Accept the limit and count: "You are right, it does nothing for surges. How many of our last ten pump failures were dry running? Those are the ones it stops."
   </TabItem>
 </Tabs>
 
 ### Slippery Slope
 
-**Definition:** Claiming that one small step will inevitably lead to an extreme outcome, without evidence for the chain of causation.
+**Definition:** Claiming that one small step must lead to an extreme result, with no evidence for the steps between.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    "If we allow one exception to the coding standard, soon everyone will ignore the standard entirely, and the codebase will become unmaintainable chaos." One exception does not inevitably lead to chaos. The argument skips over all the intermediate steps (team culture, code review process, enforcement tools) that would prevent the slide.
+    "If we allow one exception to the coding standard, soon everyone will ignore the standard and nobody will be able to maintain the code." The argument jumps over everything that would stop the slide: reviews, automatic checks, and the team's own habits.
   </TabItem>
   <TabItem label="How to Counter">
-    Challenge the causal chain: "What specifically would cause one exception to lead to everyone ignoring the standard? We have code review and linting that enforce the standard automatically. Can we grant this exception while keeping those safeguards in place?"
+    Ask for the chain: "What exactly would make one exception lead to the next? The automatic checks stay in place. Can we allow this one and write down why?"
   </TabItem>
 </Tabs>
 
@@ -197,14 +175,14 @@ In a design meeting, the best technical solution does not always win. The most p
 
 ### Appeal to Common Practice (Bandwagon)
 
-**Definition:** Arguing that something is correct or good because many people do it.
+**Definition:** Arguing that something is right or good because many people do it.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    "Everyone uses React for frontend, so we should too." Popularity does not guarantee suitability for your specific project. Your project might have constraints (bundle size, rendering performance, team expertise) that make a different framework a better fit. Popularity is a signal worth considering, but it is not a substitute for evaluating fit.
+    "Every farm in this area uses that pump brand, so we should too." It may be popular because it is good, or because one dealer is near, or because the first farm bought it and the others copied. Popularity is a reason to look closely. It does not tell you that the pump fits your depth and your flow.
   </TabItem>
   <TabItem label="How to Counter">
-    Shift from popularity to fit: "React is popular, but let us evaluate it against our actual requirements: bundle size under 100 KB, SSR support, and the team's existing experience with Vue. Which framework scores best on those criteria?"
+    Move from popularity to fit: "What head and flow do we need, and where does that point sit on this pump's curve?"
   </TabItem>
 </Tabs>
 
@@ -214,36 +192,46 @@ In a design meeting, the best technical solution does not always win. The most p
 
 <Tabs>
   <TabItem label="Engineering Example">
-    "We have always used Makefiles for our build system. There is no reason to switch to CMake." The fact that Makefiles have worked in the past does not mean they are the best choice now. If the project has grown to support multiple platforms and cross-compilation targets, a more capable build system might save significant engineering time.
+    "We have always changed the generator oil every 250 hours. There is no reason to look at it again." The interval was chosen for the old duty. If the generator now runs in a dusty yard, 250 hours may be too long. If it has become a standby set that runs 50 hours a year, the same rule leaves the oil in for five years.
   </TabItem>
   <TabItem label="How to Counter">
-    Acknowledge the history and focus on current needs: "Makefiles served us well when we had one platform. Now we support three architectures and two host operating systems. Let us compare the maintenance cost of our current Makefiles against the migration cost of switching to CMake."
+    Respect the history and ask about today: "The 250 hours served us well. What do the maker's manual and an oil sample say for the way we run it now?"
   </TabItem>
 </Tabs>
 
 ### Texas Sharpshooter Fallacy (Cherry-Picking Data)
 
-**Definition:** Cherry-picking data clusters from random results and declaring them significant, like painting a target around bullet holes after shooting.
+**Definition:** Choosing the results that agree with you from a larger set and presenting only those. The name comes from a man who shoots at a wall and then paints the target around the holes.
 
 <Tabs>
-  <TabItem label="Engineering Example">
-    You run 50 different performance benchmarks on a new compiler optimization. Three of them show a 15% improvement. You present only those three in your report and conclude "the optimization delivers 15% gains." You drew the target around the hits and ignored the 47 tests that showed no improvement or regression.
+  <TabItem label="Worked Case">
+    A supplier fits a fuel saving device to the generators at 20 sites for one month and reports: "Fuel use fell by 15% at three sites." You ask for all 20 results. The change in fuel use at each site was:
+
+    | Sites | Change in fuel use |
+    |-------|--------------------|
+    | 3 | -14%, -15%, -16% |
+    | 12 | between -3% and +3% (these twelve add up to 0) |
+    | 5 | +4%, +4%, +5%, +6%, +7% |
+
+    Add all twenty: $(-45) + 0 + (+26) = -19$. The average is $-19 / 20 = -0.95\%$, so fuel use fell by about 1% across all sites.
+
+    The claim of 15% was true for three sites and false as a description of the device. A change of 1% is smaller than what the weather and the load do to a generator from one month to the next. And five sites used more fuel, which nobody mentioned.
   </TabItem>
   <TabItem label="How to Counter">
-    Present all the data, not just the favorable subset. "We ran 50 benchmarks. Three showed 15% improvement, 40 showed no significant change, and 7 showed 5% regression. The optimization benefits specific code patterns but is not a general win."
+    Ask one question before any other: "How many did you try?" Then ask for every result, including the bad ones. In your own reports, give the whole set: "20 sites: 3 fell by about 15%, 12 did not change, 5 rose by 4% to 7%."
   </TabItem>
 </Tabs>
 
 ### Circular Reasoning (Begging the Question)
 
-**Definition:** The conclusion is assumed in the premises.
+**Definition:** The conclusion is already inside the premises.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    "This is the most reliable microcontroller because it is the one that fails the least." Reliable and "fails the least" mean the same thing. The argument provides no independent evidence for reliability, such as MTBF data, field failure rates, or qualification test results.
+    "This is the most reliable pump because it is the one that breaks down least." "Reliable" and "breaks down least" mean the same thing, so the sentence says the claim twice and supports it with nothing.
   </TabItem>
   <TabItem label="How to Counter">
-    Ask for independent evidence: "What specific data supports that reliability claim? MTBF numbers, field failure rates, or qualification test results would help us compare it to alternatives."
+    Ask for evidence from outside the claim: "What failure records or test results is that based on?"
   </TabItem>
 </Tabs>
 
@@ -254,33 +242,33 @@ In a design meeting, the best technical solution does not always win. The most p
 
 ### Burden of Proof
 
-**Definition:** Claiming that something is true because it has not been proven false (or vice versa).
+**Definition:** Claiming that something is true because nobody has shown it to be false. This is also called the argument from ignorance. It moves the work of proof onto the person who doubts.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    "We have not found any bugs in the new module, so it is bug-free." Absence of evidence is not evidence of absence. The module might have bugs that your tests do not cover. The burden of proof falls on the person making the positive claim ("it is bug-free"), and that proof requires demonstrating adequate test coverage, not just a lack of found bugs.
+    "The earth leakage relay has never tripped, so the wiring is healthy." A relay that has never tripped may be watching healthy wiring, or it may be a relay that cannot trip. No evidence of a fault is not the same as evidence of no fault. The person who claims the wiring is healthy must show it, for example with the relay's own test button and an insulation test by a licensed electrician.
   </TabItem>
   <TabItem label="How to Counter">
-    "What is our code coverage for this module? What edge cases have we tested? A lack of known bugs tells us our tests pass, not that bugs do not exist."
+    Ask what was looked for: "When was the relay last tested? What would we expect to see if there were a fault?"
   </TabItem>
 </Tabs>
 
 ### Moving the Goalposts
 
-**Definition:** Changing the criteria for proof after the original criteria have been met.
+**Definition:** Changing the test after the test has been passed.
 
 <Tabs>
   <TabItem label="Engineering Example">
-    **Manager:** "If you can show the new approach handles 1000 requests per second, we will adopt it."
+    **Manager:** "If the new pump controller saves 10% on energy in a one month trial, we will buy it for all sites."
 
-    *Developer demonstrates 1200 req/sec.*
+    *The trial shows 12%.*
 
-    **Manager:** "Okay, but can it handle 1000 req/sec with TLS enabled and database connection pooling?"
+    **Manager:** "Yes, but would it save 10% in the dry season, and on the older pumps?"
 
-    Each time the developer meets the bar, the bar moves. The additional criteria may be legitimate, but they should have been stated upfront. Moving goalposts usually signals that the decision was already made and the evidence is being managed to justify it.
+    The new questions may be fair, but they belonged at the start. A test that changes each time it is passed often means the decision was made before the trial.
   </TabItem>
   <TabItem label="How to Counter">
-    Lock down success criteria before the evaluation: "Before I run this benchmark, let us agree on exactly what result would be sufficient for adoption. I will write it down so we have a shared definition of success."
+    Fix the test before you run it: "Before the trial starts, can we write down what result is enough to buy? Then we both know what success is."
   </TabItem>
 </Tabs>
 
@@ -288,8 +276,6 @@ In a design meeting, the best technical solution does not always win. The most p
 
 <InArticleAd />
 
-
-Use this during your next technical discussion:
 
 ```mermaid
 flowchart TD
@@ -304,35 +290,20 @@ flowchart TD
     H -- No --> J{Good solution rejected\nbecause not perfect?}
     J -- Yes --> K[Nirvana Fallacy]
     J -- No --> L[Likely sound argument]
-    style L fill:#f0fdf4,stroke:#84cc16
 ```
 
+The chart covers the five you will meet most. The full list, one question for each family:
+
 <Steps>
-1. **Is the argument attacking a person instead of an idea?** (Ad Hominem, Genetic Fallacy)
+1. **Is it about the person or the claim?** (Ad Hominem, Appeal to Authority)
 
-2. **Is the argument relying on who said it rather than what the evidence shows?** (Appeal to Authority)
+2. **Is this the argument that was really made, on the subject that was really raised, with each word used in one meaning?** (Straw Man, Red Herring, Equivocation)
 
-3. **Is someone's position being accurately represented?** (Straw Man)
+3. **Are these really the only options, and is "not perfect" being used as "not worth doing"?** (False Dichotomy, Nirvana Fallacy, Slippery Slope)
 
-4. **Is the topic being changed to avoid the real issue?** (Red Herring)
+4. **Is this all the evidence, and is it evidence at all?** (Bandwagon, Appeal to Tradition, Texas Sharpshooter, Circular Reasoning)
 
-5. **Are key terms being used consistently?** (Equivocation)
-
-6. **Are there really only two options?** (False Dichotomy)
-
-7. **Is a good solution being rejected because it is not perfect?** (Nirvana Fallacy)
-
-8. **Is a small step being portrayed as inevitably leading to disaster?** (Slippery Slope)
-
-9. **Is popularity or tradition being used as evidence of quality?** (Appeal to Common Practice, Appeal to Tradition)
-
-10. **Is data being cherry-picked to support a predetermined conclusion?** (Texas Sharpshooter)
-
-11. **Is the conclusion hiding in the premises?** (Circular Reasoning)
-
-12. **Is absence of evidence being treated as evidence of absence?** (Burden of Proof)
-
-13. **Are the success criteria changing after being met?** (Moving the Goalposts)
+5. **Who has to prove it, and was the test fixed before it was run?** (Burden of Proof, Moving the Goalposts)
 </Steps>
 
 ## How to Respond to Fallacies Constructively
@@ -340,23 +311,23 @@ flowchart TD
 <InArticleAd />
 
 
-Naming a fallacy in a meeting can feel confrontational. Here are some approaches that correct the reasoning without creating conflict:
+Saying "that is a fallacy" in a meeting starts a quarrel. A question usually corrects the reasoning without one:
 
 <CardGrid>
   <Card title="Redirect to Evidence" icon="star">
-    Instead of saying "that is an ad hominem fallacy," try: "I hear the concern about experience level. Let us look at the technical merits of the proposal itself. What specific problems does it solve or create?"
+    For an attack on a person: "I hear the concern about experience. Can we look at the proposal itself? What problem does it solve, and what problem does it create?"
   </Card>
 
   <Card title="Expand the Options" icon="setting">
-    Instead of saying "that is a false dichotomy," try: "Those are two options. What other approaches could we consider? I can think of at least three more."
+    For a false dichotomy: "Those are two options. What others are there? I can think of at least one more."
   </Card>
 
   <Card title="Request Specifics" icon="approve-check">
-    Instead of saying "that is a slippery slope," try: "Help me understand the mechanism. What specifically would cause X to lead to Y? Are there safeguards we could put in place?"
+    For a slippery slope: "Help me see the steps. What exactly would make X lead to Y, and what could we put in the way?"
   </Card>
 
   <Card title="Present the Full Data" icon="warning">
-    Instead of saying "you are cherry-picking," try: "Those results are promising. Can we also look at the full dataset to see if the pattern holds across all test cases?"
+    For cherry-picked data: "Those results look good. Can we see all of them, so we know whether the pattern holds everywhere?"
   </Card>
 </CardGrid>
 
@@ -367,29 +338,29 @@ Naming a fallacy in a meeting can feel confrontational. Here are some approaches
 
 ### Exercise 1: Fallacy Journal
 
-For one week, keep a log of technical arguments you encounter (in meetings, code reviews, online forums, or Slack). For each one, identify whether the argument is logically valid or contains a fallacy. You do not need to call out the fallacy in real time. The goal is to train your recognition ability.
+For one week, note the technical arguments you hear in meetings, reviews, sales visits and online. For each, decide whether the conclusion follows from the premises or whether there is a fallacy. You do not need to say anything at the time. The aim is to train recognition.
 
 ### Exercise 2: Steelman Practice
 
-Pick a technical position you disagree with (a framework you dislike, a design pattern you find overused). Write the strongest possible argument in favor of that position. This is the opposite of a straw man: it is a steelman. If you cannot write a strong version of the opposing argument, you might not understand the debate well enough to have an opinion.
+Choose a technical position you disagree with (a maintenance policy, a product, a design habit). Write the strongest argument you can in its favor. This is the opposite of a straw man, and it is called a steelman. If you cannot write a strong version of the other side, you may not understand the question well enough to hold an opinion.
 
 ### Exercise 3: Fallacy in the Wild
 
-Find a technical blog post, forum thread, or conference talk that contains at least two logical fallacies. Identify each fallacy and explain what a valid version of the argument would look like.
+Find a product brochure, a forum thread or a talk that contains at least two fallacies. Name each one and write what a valid version of the argument would need to show.
 
 ## What Comes Next
 
 <InArticleAd />
 
 
-In [Lesson 3: Cognitive Biases in Engineering Decisions](./cognitive-biases-engineering), we shift from errors in argumentation to systematic errors in how your brain processes information. You will learn about confirmation bias, survivorship bias, sunk cost fallacy, and how these biases have contributed to real engineering disasters.
+The next lesson, [Cognitive Biases in Engineering Decisions](/education/critical-thinking-engineers/cognitive-biases-engineering/), moves from errors in arguments to regular errors in how the mind handles information: confirmation bias, survivorship bias and the sunk cost fallacy, and the part they played in real engineering disasters.
 
 ## Seen in the field
 
 <InArticleAd />
 
 
-Treating an absence of evidence as evidence of absence has a particularly dangerous physical form. A gas detector whose sensing element has failed reports zero, in exactly the same way as a healthy detector watching clean air, and one installation reported zero in 99.3% of its readings across ten weeks. Deciding which of those two situations you are in requires a second channel, and the argument is worked through in [a detector that reads zero](/blog/remote-monitoring/gas-detector-reads-zero/).
+Treating no evidence of a fault as evidence of no fault has a dangerous physical form. A gas detector whose sensing element has failed reports zero, exactly as a healthy detector does in clean air, and one installation reported zero in 99.3% of its readings across ten weeks. Deciding which of the two situations you are in needs a second channel, and the argument is worked through in [a detector that reads zero](/blog/remote-monitoring/gas-detector-reads-zero/).
 
 <CriticalThinkingEngineersComments />
 

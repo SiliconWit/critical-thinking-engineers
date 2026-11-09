@@ -25,62 +25,56 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 import CriticalThinkingEngineersComments from '../../../../components/critical-thinking-engineers/CriticalThinkingEngineersComments.astro';
 
-Engineers use data to make decisions every day: test results, benchmark comparisons, sensor readings, failure rates. But collecting data is only half the job. Interpreting it correctly is where most mistakes happen. Inspired by Alex Reinhart's book "Statistics Done Wrong," this lesson covers the statistical errors that show up most often in engineering contexts. These are not exotic mistakes that only affect academic researchers. They are everyday errors that affect whether you ship buggy firmware, choose the wrong component, or draw false conclusions from your test bench. #Statistics #DataAnalysis #CriticalThinking
+A new pump controller runs for three days without a trip, so the company orders forty more. A vibration alarm "catches 90% of failing bearings", so every alarm is treated as a failing bearing. Both conclusions feel safe, and both come from reading numbers wrongly. This lesson, which follows Alex Reinhart's book "Statistics Done Wrong", covers the errors with data that appear most often in technical work, and shows for each how to check a claim with a few lines of arithmetic. #Statistics #DataAnalysis #CriticalThinking
 
 ## The P-Value: What It Actually Means
 
-The p-value is the most misunderstood number in engineering and science. Let us set the record straight.
+You change something and the measurement moves. Was it your change, or the ordinary scatter of the measurement? A p-value is the usual tool for that question, and it is very often misread.
+
+The test starts from a cautious assumption called the null hypothesis: there is no real effect, and any difference you see is chance.
 
 <Card title="The Real Definition" icon="star">
-A p-value is the probability of observing data at least as extreme as what you measured, assuming the null hypothesis is true. That is it. It does not tell you the probability that your hypothesis is correct. It does not tell you the probability that the result is "real." It does not tell you the size or importance of the effect.
+A p-value is the probability of getting data at least as extreme as yours, if the null hypothesis is true. It is not the probability that your idea is correct. It does not say that the result is "real". It says nothing about how large or how important the effect is.
 </Card>
 
 ```text
-  What a P-Value Actually Measures
-  ──────────────────────────────────────────────────────────
-  Assume: null hypothesis is true (no real effect)
-       │
-       ▼
-  Run your experiment, collect data
-       │
-       ▼
-  p-value = probability of seeing data
-            THIS EXTREME or more extreme,
-            if there truly is no effect
-       │
-       ▼
-  p < 0.05 means: this result would happen
-  by pure chance less than 5% of the time
-
-  IT DOES NOT MEAN:
-  ✗ "5% chance the result is random"
-  ✗ "95% chance our hypothesis is correct"
-  ✗ "The effect is large or important"
+  Assume there is no real effect
+               │
+               ▼
+  Measure, and find a difference
+               │
+               ▼
+  p = how often chance alone would give
+      a difference this large or larger
+               │
+               ▼
+  p < 0.05: chance alone would do this
+            less than 1 time in 20
 ```
 
 ### What p = 0.05 Does NOT Mean
 
 | Common Misinterpretation | Why It Is Wrong |
 |--------------------------|----------------|
-| "There is only a 5% chance the result is due to chance" | The p-value assumes chance (null hypothesis) is the explanation. It tells you how surprising the data is under that assumption, not the probability that chance is the explanation. |
-| "There is a 95% chance our hypothesis is correct" | P-values say nothing about the probability of hypotheses. That requires Bayesian analysis with prior probabilities. |
-| "The effect is large and important" | A tiny, practically meaningless effect can have p < 0.001 if the sample size is large enough. Statistical significance is not the same as practical significance. |
-| "If p > 0.05, there is no effect" | Failure to reject the null hypothesis is not the same as confirming it. Your test might simply lack the statistical power to detect a real effect. |
+| "There is only a 5% chance the result is due to chance" | The p-value is calculated by assuming that chance is the explanation. It tells you how surprising the data are under that assumption, not how likely the assumption is. |
+| "There is a 95% chance our hypothesis is correct" | A p-value says nothing about the probability of a hypothesis. For that you also need to know how likely the hypothesis was before the test. |
+| "The effect is large and important" | A very small effect can have p < 0.001 if the sample is large enough. Statistically significant does not mean large enough to matter. |
+| "If p > 0.05, there is no effect" | Failing to find an effect does not prove there is none. The test may have had too few samples to detect a real one. |
 
 ### Engineering Example
 
-You are comparing two sorting algorithms on your embedded system. You run each 10 times and find that Algorithm A averages 12.3 ms and Algorithm B averages 12.1 ms, with p = 0.03. Statistically significant! But a 0.2 ms difference on a system with 50 ms timing margins is practically irrelevant. The p-value told you the difference is probably real, but it did not tell you the difference matters.
+You compare two lubricants in a gearbox. In 10 runs with each, the gearbox settles at 62.3 °C with lubricant A and 62.1 °C with lubricant B, with p = 0.03. The result is statistically significant. But the difference is 0.2 °C in a gearbox whose alarm limit is 85 °C, and it changes nothing you would do. The p-value told you that a difference of this size would be surprising if the two lubricants were equal. It did not tell you that the difference matters.
 
-**Rule of thumb:** Always report effect sizes alongside p-values. "Algorithm B is 0.2 ms faster (p = 0.03)" lets the reader judge both statistical and practical significance.
+**Rule of thumb:** Always report the size of the effect with the p-value. "Lubricant B runs 0.2 °C cooler (p = 0.03)" lets the reader judge both.
 
 ## P-Hacking: Torturing Data Until It Confesses
 
 <InArticleAd />
 
 
-**What it is:** Running many statistical tests, trying different subsets of data, adjusting parameters, or selectively reporting results until you find something with p < 0.05.
+**What it is:** Running many statistical tests, trying different parts of the data, or reporting only some of the results, until something gives p < 0.05.
 
-The following simulation shows how easy it is to find "significant" results from pure noise. We test 20 completely random hypotheses (no real effect exists) and count how many come back with p < 0.05.
+The program below shows how easily pure noise gives "significant" results. It tests 20 random hypotheses in which no real effect exists and counts how many give p < 0.05.
 
 ```python title="p_hacking_simulation.py"
 import numpy as np
@@ -122,22 +116,22 @@ flowchart TD
 
 <Tabs>
   <TabItem label="How It Happens">
-    You are testing whether a new compiler optimization improves performance. You run benchmarks on 20 different code patterns. Most show no significant difference. But three patterns show p < 0.05 improvement. You report those three and conclude "the optimization significantly improves performance for computational kernels."
+    You try an energy saving setting on 20 different machines. Most show no clear difference. Three show a saving with p < 0.05. You report those three and conclude "the setting saves energy on compressors".
 
-    The problem: if you test 20 things at the p = 0.05 level, you expect about one false positive purely by chance (20 x 0.05 = 1). Finding three "significant" results out of 20 tests is barely above the false positive rate. You might be reporting noise.
+    The problem: if you test 20 things at the p = 0.05 level, you expect about one false positive from chance alone ($20 \times 0.05 = 1$). Three "significant" results in 20 tests is weak evidence: when no real effect exists, chance alone gives three or more about 8% of the time. You may be reporting noise.
   </TabItem>
   <TabItem label="Subtle Forms">
-    P-hacking is often unintentional. Common forms include:
+    P-hacking is often done without intent. Common forms:
 
-    - **Optional stopping:** Running an experiment until you get a significant result, then stopping. "Let us collect more data" selectively when the current results are not significant.
-    - **Outlier exclusion:** Removing data points that hurt your results with post-hoc justifications.
-    - **Subgroup analysis:** Slicing data by different categories until a significant pattern emerges. "The optimization does not help overall, but it helps for loops with fewer than 50 iterations."
-    - **Multiple metrics:** Testing many outcome measures and reporting only the one that reached significance.
+    - **Optional stopping:** You collect data until the result is significant and then stop.
+    - **Removing outliers:** You remove the points that hurt your result and find a reason afterwards.
+    - **Subgroups:** You divide the data in different ways until a pattern appears. "It does not help overall, but it helps on the night shift."
+    - **Many measures:** You measure many outcomes and report only the one that was significant.
   </TabItem>
   <TabItem label="How to Prevent It">
-    - **Pre-register your analysis plan.** Before collecting data, write down what you will test, how many tests, and what threshold you will use for significance.
-    - **Apply multiple comparison corrections.** If you run 20 tests, use Bonferroni correction (divide your significance threshold by 20) or control the false discovery rate.
-    - **Report all results.** Include the tests that did not reach significance. A reader who sees "3 out of 20 patterns improved" draws a very different conclusion than one who sees "computational kernels improved."
+    - **Write the plan first.** Before you collect data, write down what you will test, how many tests you will run, and what threshold you will use.
+    - **Correct for the number of tests.** The section on multiple comparisons below shows how.
+    - **Report all results.** A reader who sees "3 of 20 machines improved" draws a different conclusion from one who sees "compressors improved".
   </TabItem>
 </Tabs>
 
@@ -146,26 +140,15 @@ flowchart TD
 <InArticleAd />
 
 
-This is perhaps the most common statistical error in everyday engineering: drawing strong conclusions from tiny amounts of data.
+The most common error with data in daily technical work is a strong conclusion from very few cases.
 
 <Card title="The Core Problem" icon="warning">
-You tested your firmware on 3 boards and all 3 passed. You tested your API under load and it handled all 5 test runs without errors. You benchmarked your algorithm on 4 datasets and it was faster every time. In each case, the sample size is far too small to draw reliable conclusions. With 3 boards, you have not tested enough variation in component tolerances, PCB manufacturing differences, or environmental conditions. Your 5 load test runs do not capture the variance in network conditions, database state, or garbage collection timing.
+The new controller ran three days without a trip. The repaired pump started five times out of five. The program passed on the 3 boards you tested. In each case the sample is far too small to support the conclusion. Three days do not include a hot afternoon, a low tank or a weak supply. Three boards do not cover the spread between components or between factories.
 </Card>
-
-### How Small Is Too Small?
-
-There is no universal answer, but some guidelines for engineering contexts:
-
-| Context | Minimum Sample Size | Why |
-|---------|-------------------|-----|
-| **Hardware testing** | 30+ units for basic statistics, 100+ for reliability estimates | Component tolerances, manufacturing variation |
-| **Performance benchmarking** | 30+ runs minimum, with warm-up runs excluded | JIT compilation, caching effects, OS scheduling variance |
-| **A/B testing (web)** | Depends on effect size; typically thousands per variant | Small effects require large samples to detect |
-| **Sensor calibration** | 50+ readings per calibration point | Sensor noise, environmental variation |
 
 ### The "We Ran It 3 Times" Problem
 
-How often will 3 tests miss a real defect? The simulation below draws from a population with a known 10% defect rate and checks how many batches of 3 tests come back clean.
+How often do 3 tests miss a real defect? The program below takes items from a population in which 10% are defective, three at a time, and counts how often all three pass.
 
 ```python title="small_sample_trap.py"
 import numpy as np
@@ -192,14 +175,16 @@ print(f"'We tested 3 boards and they all passed' is dangerously weak evidence.")
 
 <Tabs>
   <TabItem label="The Scenario">
-    Your team has a new firmware build. QA runs the test suite 3 times on one board. All tests pass. The build is approved for release.
+    A new pump controller is installed at one site. It runs for 3 days without a nuisance trip, and it is approved for all sites.
 
-    With 3 test runs, you have almost no statistical power to detect intermittent bugs. A bug that occurs 10% of the time has a 73% chance of not appearing in 3 runs (0.9 cubed = 0.729). A bug that occurs 5% of the time has an 86% chance of hiding. You have not proven reliability; you have proven almost nothing.
+    Suppose the controller has a fault that causes a trip on 10% of days. The chance that 3 days pass with no trip is $0.9 \times 0.9 \times 0.9 = 0.729$, or 73%. A fault that appears on 5% of days stays hidden 86% of the time. The three clean days have proved almost nothing.
   </TabItem>
   <TabItem label="The Math">
-    The probability of a bug hiding in n runs, given a failure probability of p per run:
+    If a failure appears with probability $p$ in each run, the probability that $n$ runs all pass is:
 
-    P(no failures in n runs) = (1 - p)^n
+    $$
+    P(\text{no failures in } n \text{ runs}) = (1 - p)^n
+    $$
 
     | Failure Rate | 3 Runs | 10 Runs | 30 Runs | 100 Runs |
     |-------------|--------|---------|---------|----------|
@@ -207,10 +192,10 @@ print(f"'We tested 3 boards and they all passed' is dangerously weak evidence.")
     | 5% | 86% hide | 60% hide | 21% hide | 0.6% hide |
     | 10% | 73% hide | 35% hide | 4% hide | 0.003% hide |
 
-    Even a 10% failure rate has a 73% chance of hiding in just 3 test runs. This is why "it passed QA" can be a dangerously weak statement.
+    Read one row: a fault that appears 5% of the time is still hidden after 30 clean runs about 1 time in 5.
   </TabItem>
   <TabItem label="The Fix">
-    Define the failure rate you need to detect and the confidence level you need, then calculate the required sample size. For a 1% failure rate at 95% confidence, you need approximately 300 test runs (ln(0.05) / ln(0.99) is approximately 299). This is not academic pedantry; it is the difference between shipping a reliable product and shipping a ticking time bomb.
+    Decide the failure rate you must be able to detect and how sure you need to be. Then calculate the number of runs. To be 95% sure that a failure rate of 1% would have shown itself, you need about 300 runs with no failure ($\ln(0.05) / \ln(0.99) \approx 298.1$, which rounds up to 299). If you cannot run that many, say so: "3 days, no trips, which cannot exclude a fault on 1 day in 10."
   </TabItem>
 </Tabs>
 
@@ -219,20 +204,17 @@ print(f"'We tested 3 boards and they all passed' is dangerously weak evidence.")
 <InArticleAd />
 
 
-**What it is:** Building a model or drawing a conclusion that fits the training data perfectly but fails on new data because it captured noise rather than the underlying pattern.
+**What it is:** Building a model that fits the data you have very closely and fails on new data, because it has fitted the noise in your data and not the pattern under it.
 
 <Tabs>
-  <TabItem label="In Machine Learning">
-    You train a neural network to classify sensor data. On the training set, it achieves 99% accuracy. On new data, it drops to 60%. The model memorized the specific noise patterns in the training data rather than learning the general features that distinguish the classes. This is the classic overfitting problem.
-  </TabItem>
-  <TabItem label="In Engineering Analysis">
-    Overfitting is not limited to ML. You measure system performance under 5 different configurations and find a complex relationship: "performance peaks at 3.7 GHz clock, with 4 threads, and 16 KB L1 cache, and the interaction between clock and thread count follows a cubic polynomial." With 5 data points and a complex model, you are fitting noise. The "relationship" will not hold for the 6th configuration.
+  <TabItem label="An Energy Baseline">
+    You have 5 monthly energy bills for a factory. You fit a formula for monthly energy with four inputs: outdoor temperature, production, humidity and number of working days. With its constant term the formula has 5 adjustable numbers, and 5 adjustable numbers can pass exactly through any 5 points. The fit is perfect and it means nothing. In the sixth month the formula can be wrong by a wide margin, and any "saving" calculated from it is wrong by the same amount.
   </TabItem>
   <TabItem label="How to Detect and Prevent">
-    - **Hold out test data.** Never evaluate your model or conclusion on the same data used to build it.
-    - **Use cross-validation.** Split your data into multiple folds and test on each fold in turn.
-    - **Prefer simpler models.** A linear relationship that holds across new data is more useful than a complex polynomial that only fits the training set.
-    - **Be suspicious of perfect fits.** If your model explains 100% of the variance, it is almost certainly overfitting.
+    - **Keep some data back.** Never test a model on the same data you used to build it. Fit on some months and check on the others.
+    - **Prefer the simpler model.** A straight line that holds on new data is worth more than a complicated curve that fits only the old data.
+    - **Count your data against your adjustable numbers.** You need many more points than numbers to adjust.
+    - **Distrust a perfect fit.** Real measurements have scatter. A model with none has probably fitted the scatter.
   </TabItem>
 </Tabs>
 
@@ -241,53 +223,60 @@ print(f"'We tested 3 boards and they all passed' is dangerously weak evidence.")
 <InArticleAd />
 
 
-**What it is:** A confounding variable is a third factor that influences both the independent and dependent variables, creating a spurious correlation.
-
-<Card title="The Classic Example" icon="star">
-Ice cream sales and drowning deaths are strongly correlated. Eating ice cream does not cause drowning. Both are caused by a confounding variable: hot weather. People swim more in hot weather (more drownings) and buy more ice cream in hot weather. The correlation between ice cream and drowning is real, but the causal relationship is not.
-</Card>
+**What it is:** A confounding variable is a third factor that moves both of the things you are comparing, so that they rise and fall together although neither causes the other.
 
 ### Engineering Confounds
 
 | Observed Correlation | Apparent Conclusion | Confounding Variable |
 |---------------------|---------------------|---------------------|
-| Teams that use language X ship faster | Language X makes teams faster | Teams that choose language X tend to be more experienced |
-| Projects with more code reviews have fewer bugs | Code reviews prevent bugs | Both are caused by a strong engineering culture |
-| Servers with more RAM crash less often | RAM prevents crashes | Servers with more RAM are newer and have fewer hardware issues |
-| Engineers who attend conferences produce more patents | Conferences inspire innovation | Productive engineers are more likely to be sent to conferences |
+| Energy use fell in the month after a "power saver" was fitted | The device saves energy | The month was cooler, so the cooling plant worked less |
+| Pumps serviced by one contractor fail less often | That contractor does better work | That contractor has the newer sites |
+| Servers with more memory crash less often | Memory prevents crashes | Servers with more memory are newer |
 
 ### How to Counter Confounding
 
 <Steps>
-1. **Ask "what else changed?"** Whenever you observe a correlation, brainstorm what other variables could explain it.
+1. **Ask "what else changed?"** For every correlation, list the other things that could explain it.
 
-2. **Control for confounds.** If you want to test whether a new compiler flag improves performance, change only the flag. Same hardware, same code, same test inputs, same time of day (to control for thermal throttling).
+2. **Change one thing.** To test a new setting, change only that setting: same machine, same load, same time of day.
 
-3. **Use randomized controlled experiments when possible.** Randomly assigning test conditions neutralizes confounds you have not even thought of.
+3. **Randomize when you can.** If chance decides which units get the change, the factors you did not think of are spread evenly between the two groups.
 
-4. **Be humble about observational data.** Most engineering data is observational (you did not randomly assign teams to programming languages). Observational data can suggest hypotheses but rarely proves causation.
+4. **Be modest about data you only observed.** It can suggest a cause. It seldom proves one.
 </Steps>
+
+Confounding has a lesson of its own, [Correlation, Causation, and Evidence](/education/critical-thinking-engineers/correlation-causation-evidence/), with a worked energy saving claim.
 
 ## Base Rate Neglect
 
 <InArticleAd />
 
 
-**What it is:** Ignoring the base rate (the overall probability of an event) when evaluating specific evidence.
+**What it is:** Judging a test result or an alarm without asking how common the thing it looks for is. That overall frequency is called the base rate.
 
 <Tabs>
-  <TabItem label="The Classic Puzzle">
-    A disease affects 1 in 10,000 people. A test for the disease is 99% accurate (99% true positive rate, 1% false positive rate). You test positive. What is the probability you actually have the disease?
+  <TabItem label="Worked Case">
+    A site has 1,000 motors. A vibration alarm sounds for 90% of the motors that have a failing bearing. It also sounds, wrongly, for 5% of the healthy motors. At any time about 2% of the motors have a failing bearing. The alarm sounds on motor 417. How likely is it that the bearing is failing?
 
-    Most people say 99%. The correct answer is about 1%. Here is why: in a population of 10,000, about 1 person has the disease and 9,999 do not. The test correctly identifies the 1 sick person (99% sensitivity). But it also falsely flags about 100 healthy people (1% of 9,999). So out of 101 positive results, only 1 is a true positive. Your probability of actually having the disease is 1/101, roughly 1%.
+    Most people say about 90%. Count the motors:
+
+    | | Motors | Alarm sounds |
+    |---|--------|--------------|
+    | Failing bearing | 2% of 1,000 = 20 | 90% of 20 = 18 |
+    | Healthy | 980 | 5% of 980 = 49 |
+    | Total | 1,000 | 67 |
+
+    Of the 67 alarms, only 18 are real: $18 / 67 = 27\%$. Nearly three alarms in four are false, from an alarm that does catch 90% of the faults. The healthy motors are so many that even 5% of them is more than all the faulty ones.
+
+    This is why people stop listening to alarms. The remedy is not to ignore them. It is to lower the false alarm rate, or to use a second, different check before sending a technician.
   </TabItem>
-  <TabItem label="In Engineering">
-    Your automated test suite flags a build as "potentially buggy" based on static analysis. The static analysis tool has a 90% true positive rate and a 5% false positive rate. Sounds great. But if only 2% of builds actually contain bugs, most flagged builds will be false positives. Out of 1000 builds: 20 have bugs (18 correctly flagged), 980 are clean (49 falsely flagged). Of the 67 flagged builds, only 18 (27%) actually have bugs.
+  <TabItem label="The Classic Puzzle">
+    A disease affects 1 person in 10,000. A test is "99% accurate": it finds 99% of the people who have the disease and wrongly marks 1% of those who do not. Your result is positive. How likely is it that you have the disease?
 
-    This is why high false positive rates in CI tools cause "alert fatigue." The base rate of actual problems is low, so even a good detector produces mostly noise.
+    Most people say 99%. The answer is about 1%. Among 10,000 people, 1 has the disease and the test finds that person. Among the 9,999 others, the test wrongly marks about 100. So there are about 101 positive results and 1 of them is real: $1/101$, about 1%.
   </TabItem>
   <TabItem label="How to Counter">
-    Always consider the base rate before interpreting test results. Ask: "How common is this event in the first place?" Then use Bayes' theorem (or just the reasoning above) to calculate the actual probability given a positive test result.
+    Before you read a test result or an alarm, ask: "How common is this in the first place?" Then count, as in the table: how many real cases, how many of them are caught, and how many false alarms come from all the rest.
   </TabItem>
 </Tabs>
 
@@ -296,19 +285,19 @@ Ice cream sales and drowning deaths are strongly correlated. Eating ice cream do
 <InArticleAd />
 
 
-**What it is:** When you test many hypotheses simultaneously, the chance of at least one false positive increases dramatically.
+**What it is:** When you run many tests at once, the chance that at least one gives a false positive rises quickly.
 
 <Card title="The Jelly Bean Study" icon="warning">
-A famous xkcd comic illustrates this perfectly. Scientists test whether jelly beans cause acne. They test 20 different colors. At the p = 0.05 level, they expect 1 false positive out of 20 tests. Sure enough, green jelly beans show p = 0.04. The headline reads: "Green Jelly Beans Linked to Acne (p < 0.05)." The full context (19 other colors showed nothing) is omitted. This is the multiple comparisons problem.
+A well known xkcd comic shows it. Scientists test whether jelly beans cause acne, one color at a time, for 20 colors. At the p = 0.05 level they should expect 1 false positive in 20 tests. Green jelly beans give p < 0.05, and the newspaper prints: "Green Jelly Beans Linked to Acne". The 19 colors that showed nothing are not mentioned.
 </Card>
 
 ### In Engineering
 
-You are optimizing firmware performance and test 15 different compiler flags. Using p = 0.05 as your threshold, you expect about 0.75 false positives by chance. If you find one flag with p = 0.04, it is more likely noise than signal.
+After a service visit you compare 15 sensor channels before and after, each with p = 0.05 as the threshold. If the service changed nothing, you still expect $15 \times 0.05 = 0.75$ false positives, and the chance of at least one is $1 - 0.95^{15} = 54\%$. So one channel with p = 0.04 is more likely noise than a real change.
 
-**The Bonferroni correction:** Divide your significance threshold by the number of tests. For 15 tests at p = 0.05, require p < 0.05/15 = 0.0033 for any individual test to be considered significant. This is conservative but prevents false discoveries.
+**The Bonferroni correction:** Divide the threshold by the number of tests. For 15 tests, accept a single result only if $p < 0.05/15 = 0.0033$. This is strict, and it prevents false discoveries.
 
-**False Discovery Rate (FDR) control:** A less conservative approach that controls the expected proportion of false discoveries among all discoveries. The Benjamini-Hochberg procedure is the most common method.
+**False Discovery Rate (FDR) control:** A less strict method that limits the expected share of false discoveries among all discoveries. The Benjamini-Hochberg procedure is the usual one.
 
 :::tip[Instrument it]
 Sensor data lies in quiet, statistical ways. Sample a vibration signal too slowly and a real fault aliases into a frequency that is not there; log only when a threshold trips and your history is biased toward trouble it never saw the start of; average away a transient and the spike that mattered disappears. Before you trust a number off an instrument, whether on a scope or on a live dashboard like [siliconwit.io's public devices](https://siliconwit.io/public-devices), ask how it was sampled, how it was aggregated, and what it left out. A measurement you cannot defend statistically is one you should not act on.
@@ -319,24 +308,24 @@ Sensor data lies in quiet, statistical ways. Sample a vibration signal too slowl
 <InArticleAd />
 
 
-Before drawing conclusions from data, run through this checklist:
+Before you draw a conclusion from data, go through this list:
 
 <Steps>
-1. **Sample size.** Is it large enough to detect the effect you care about? Can you calculate the minimum sample size needed?
+1. **Sample size.** Is it large enough to show the effect you care about? Have you calculated how many you need?
 
-2. **Effect size.** Even if statistically significant, is the effect practically meaningful for your application?
+2. **Effect size.** If the result is statistically significant, is it also large enough to matter?
 
-3. **Multiple comparisons.** Did you test multiple hypotheses? Did you correct for it?
+3. **Multiple comparisons.** Did you run more than one test? Did you correct for it?
 
-4. **Confounding variables.** What else changed between your test conditions? Could a third variable explain the correlation?
+4. **Confounding variables.** What else changed between the two conditions?
 
-5. **Selection bias.** Is your sample representative, or are you only looking at cases that survived some filter?
+5. **Selection.** Does your sample represent the whole, or only the cases that passed some filter?
 
-6. **Overfitting.** Are you testing your conclusion on the same data you used to generate it?
+6. **Overfitting.** Are you checking your conclusion on the same data that gave it to you?
 
-7. **Base rate.** How common is the event you are detecting? Could most "positive" detections be false positives?
+7. **Base rate.** How common is the event you are detecting? Could most detections be false?
 
-8. **Reproducibility.** If someone else ran the same experiment, would they get the same result? Have you tried?
+8. **Repeatability.** Would another person who repeated the test get the same result? Has anyone tried?
 </Steps>
 
 ## Exercises
@@ -346,37 +335,37 @@ Before drawing conclusions from data, run through this checklist:
 
 ### Exercise 1: P-Value Interpretation
 
-A colleague reports: "We compared the latency of Framework A vs Framework B. Framework A had a mean latency of 45 ms and Framework B had 43 ms, with p = 0.02. Framework B is significantly faster." Write a response that addresses what this result does and does not tell you. Consider effect size, sample size, and practical significance.
+A colleague reports: "Pump A used 45 kWh a day on average and pump B used 43 kWh, with p = 0.02. Pump B is significantly more efficient." Write a reply that says what this result does and does not tell you. Consider the size of the effect, the number of days measured and what else differed between the pumps.
 
 ### Exercise 2: Sample Size Calculator
 
-Your team needs to verify that a firmware bug with a 2% occurrence rate is fixed. How many test runs do you need to be 95% confident that the bug is gone? (Hint: use the formula n = ln(1 - confidence) / ln(1 - failure_rate), so n = ln(0.05) / ln(0.98), which gives approximately 149.)
+A fault appeared in 2% of pump starts. After a repair, how many starts with no fault do you need to be 95% confident that the fault is gone? (Hint: use the formula $n = \ln(1 - \text{confidence}) / \ln(1 - \text{failure rate})$, so $n = \ln(0.05) / \ln(0.98) \approx 148.3$, which rounds up to 149.)
 
 ### Exercise 3: Confound Spotter
 
-Your company adopted a new project management tool six months ago. Since then, on-time delivery improved by 20%. Your manager credits the tool. List at least three confounding variables that could explain the improvement without the tool being the cause.
+Your company started a new maintenance plan six months ago. Since then, breakdowns have fallen by 20%, and your manager gives the plan the credit. List at least three confounding variables that could explain the fall without the plan.
 
 ### Exercise 4: Base Rate Calculation
 
-Your CI pipeline uses a static analysis tool with a 95% true positive rate and 3% false positive rate. If 5% of commits introduce bugs, what percentage of flagged commits actually contain bugs? Work through the calculation step by step.
+An alarm sounds for 95% of real faults and for 3% of healthy machines. If 5% of machines have the fault, what share of the alarms are real? Count it for 1,000 machines, step by step.
 
 ### Exercise 5: Multiple Comparisons Audit
 
-Review a recent technical report or paper that tests multiple hypotheses. Did the author apply any multiple comparison correction? If not, how many of the "significant" results might be false positives?
+Find a technical report that tests several hypotheses. Did the author correct for the number of tests? If not, how many of the "significant" results could be false positives?
 
 ## What Comes Next
 
 <InArticleAd />
 
 
-In [Lesson 5: How to Lie with Charts and Data](./lying-with-charts-data), we move from numerical statistics to visual presentation. You will learn how charts can mislead through truncated axes, cherry-picked time windows, deceptive scales, and visual tricks that make data say whatever the presenter wants it to say.
+The next lesson, [How to Lie with Charts and Data](/education/critical-thinking-engineers/lying-with-charts-data/), moves from numbers to pictures: how a cut axis, a chosen time window or a stretched scale can make a chart say what its author wants.
 
 ## Seen in the field
 
 <InArticleAd />
 
 
-Detecting a small effect inside a large source of variation is not primarily a statistics problem, it is a measurement design problem, and the fix is usually to pick a channel where the effect is not competing with anything. Stored grain shows this well: respiration produces both carbon dioxide and heat, but the heat is buried inside an eleven degree swing driven by the weather while the carbon dioxide has essentially one source. The comparison is worked through in [the silo never got hot](/blog/remote-monitoring/grain-storage-spoilage-monitoring/).
+Detecting a small effect inside a large source of variation is first a problem of measurement design, and the fix is usually to pick a channel where the effect is not competing with anything. Stored grain shows this well: respiration produces both carbon dioxide and heat, but the heat is buried inside an eleven degree swing driven by the weather while the carbon dioxide has essentially one source. The comparison is worked through in [the silo never got hot](/blog/remote-monitoring/grain-storage-spoilage-monitoring/).
 
 <CriticalThinkingEngineersComments />
 

@@ -63,7 +63,7 @@ A p-value is the probability of getting data at least as extreme as yours, if th
 
 ### Engineering Example
 
-You compare two lubricants in a gearbox. In 10 runs with each, the gearbox settles at 62.3 °C with lubricant A and 62.1 °C with lubricant B, with p = 0.03. The result is statistically significant. But the difference is 0.2 °C in a gearbox whose alarm limit is 85 °C, and it changes nothing you would do. The p-value told you that a difference of this size would be surprising if the two lubricants were equal. It did not tell you that the difference matters.
+You compare two lubricants in a gearbox, 10 runs with each. It settles at 62.3 °C with lubricant A and 62.1 °C with lubricant B, with p = 0.03: statistically significant. But 0.2 °C in a gearbox whose alarm limit is 85 °C changes nothing you would do. The p-value says that a difference this size would be surprising if the two lubricants were equal, not that the difference matters.
 
 **Rule of thumb:** Always report the size of the effect with the p-value. "Lubricant B runs 0.2 °C cooler (p = 0.03)" lets the reader judge both.
 
@@ -268,7 +268,7 @@ Confounding has a lesson of its own, [Correlation, Causation, and Evidence](/edu
 
     Of the 67 alarms, only 18 are real: $18 / 67 = 27\%$. Nearly three alarms in four are false, from an alarm that does catch 90% of the faults. The healthy motors are so many that even 5% of them is more than all the faulty ones.
 
-    This is why people stop listening to alarms. The remedy is not to ignore them. It is to lower the false alarm rate, or to use a second, different check before sending a technician.
+    This is why people stop listening to alarms. The remedy is not to ignore them but to lower the false alarm rate, or to add a second, different check before a technician is sent.
   </TabItem>
   <TabItem label="The Classic Puzzle">
     A disease affects 1 person in 10,000. A test is "99% accurate": it finds 99% of the people who have the disease and wrongly marks 1% of those who do not. Your result is positive. How likely is it that you have the disease?
